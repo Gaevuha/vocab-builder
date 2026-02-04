@@ -1,3 +1,7 @@
+import LinearProgress from "@mui/material/LinearProgress";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 export type ProgressBarProps = {
   value: number;
   max: number;
@@ -8,15 +12,19 @@ export function ProgressBar({ value, max }: ProgressBarProps) {
     max === 0 ? 0 : Math.min(100, Math.round((value / max) * 100));
 
   return (
-    <div
-      className="progress-bar"
-      role="progressbar"
-      aria-valuenow={percentage}
-      aria-valuemin={0}
-      aria-valuemax={100}
-    >
-      <div className="progress-bar__fill" style={{ width: `${percentage}%` }} />
-      <span className="progress-bar__label">{percentage}%</span>
-    </div>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress
+          variant="determinate"
+          value={percentage}
+          aria-valuenow={percentage}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        />
+      </Box>
+      <Typography variant="body2" color="text.secondary">
+        {percentage}%
+      </Typography>
+    </Box>
   );
 }

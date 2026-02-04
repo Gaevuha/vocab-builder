@@ -32,7 +32,11 @@ export const loginSchema = yup.object({
 
 export const addWordSchema = yup.object({
   category: yup.string().required("Category is required"),
-  verbType: yup.string(),
+  verbType: yup.string().when("category", {
+    is: (value: string) => value === "verb",
+    then: (schema) => schema.required("Verb type is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
   en: yup
     .string()
     .required("English word is required")

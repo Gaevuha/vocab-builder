@@ -1,15 +1,25 @@
-import { request } from "./api";
+// src/services/training.ts
+import { api, ApiError } from "./api";
 import type { TrainingTask } from "../types/training";
 
-export function fetchTrainingTasks() {
-  return request<TrainingTask[]>("/training/tasks");
+export async function fetchTrainingTasks(): Promise<TrainingTask[]> {
+  try {
+    const res = await api.get<TrainingTask[]>("/words/tasks");
+    return res.data;
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError("Failed to fetch training tasks", 500);
+  }
 }
 
-export function submitTraining(payload: {
+export async function submitTraining(payload: {
   answers: Array<{ taskId: string; answer: string }>;
 }) {
-  return request<{ score: number }>("/training/submit", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  try {
+    const res = await api.post<{ score: number }>("/words/answers", payload);
+    return res.data;
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError("Failed to submit training", 500);
+  }
 }
