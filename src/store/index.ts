@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./slices/authSlice";
 import { uiReducer } from "./slices/uiSlice";
-import { categoriesReducer } from "./slices/categoriesSlice";
+import categoriesReducer from "./slices/categoriesSlice";
 import { wordsReducer } from "./slices/wordsSlice";
 import { trainingReducer } from "./slices/trainingSlice";
 

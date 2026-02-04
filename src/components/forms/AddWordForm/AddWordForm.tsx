@@ -39,8 +39,8 @@ export function AddWordForm({
         <select {...register("category")}>
           <option value="">Select category</option>
           {categories.map((category) => (
-            <option key={category.id} value={category.name}>
-              {category.name}
+            <option key={category} value={category}>
+              {category}
             </option>
           ))}
         </select>

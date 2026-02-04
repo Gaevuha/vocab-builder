@@ -14,6 +14,8 @@ export function Filters({
   onVerbTypeChange,
 }: FiltersProps) {
   const categories = useAppSelector((state) => state.categories.items);
+  const loading = useAppSelector((state) => state.categories.loading); // логіка завантаження
+
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [verbType, setVerbType] = useState("");
@@ -49,11 +51,17 @@ export function Filters({
         <select
           value={category}
           onChange={(event) => setCategory(event.target.value)}
+          disabled={loading}
         >
           <option value="">All</option>
+          {categories.length === 0 && !loading && (
+            <option value="" disabled>
+              No categories
+            </option>
+          )}
           {categories.map((item) => (
-            <option key={item.id} value={item.name}>
-              {item.name}
+            <option key={item} value={item}>
+              {item}
             </option>
           ))}
         </select>
