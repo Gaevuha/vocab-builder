@@ -1,0 +1,13 @@
+.logoLink {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.33333;
+}
+
+.iconLogo {
+  width: 36px;
+  height: 36px;
+  margin-right: 16px;
+}

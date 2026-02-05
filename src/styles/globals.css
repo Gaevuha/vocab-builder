@@ -1,69 +1,42 @@
+/* Regular (400) */
 @font-face {
-  font-display: swap;
-  font-family: "Montserrat";
-  font-style: normal;
+  font-family: "MacPaw Fixel Display";
+  src: url("../assets/fonts/FixelDisplay-Regular.woff2") format("woff2"),
+    url("../assets/fonts/FixelDisplay-Regular.woff") format("woff"),
+    url("../assets/fonts/FixelDisplay-Regular.ttf") format("truetype");
   font-weight: 400;
-  src: url("../fonts/montserrat-v29-latin-regular.eot");
-  src: url("../fonts/montserrat-v29-latin-regular.eot?#iefix")
-      format("embedded-opentype"),
-    url("../fonts/montserrat-v29-latin-regular.woff2") format("woff2"),
-    url("../fonts/montserrat-v29-latin-regular.woff") format("woff"),
-    url("../fonts/montserrat-v29-latin-regular.ttf") format("truetype"),
-    url("../fonts/montserrat-v29-latin-regular.svg#Montserrat") format("svg");
-}
-@font-face {
-  font-display: swap;
-  font-family: "Montserrat";
   font-style: normal;
-  font-weight: 500;
-  src: url("../fonts/montserrat-v29-latin-500.eot");
-  src: url("../fonts/montserrat-v29-latin-500.eot?#iefix")
-      format("embedded-opentype"),
-    url("../fonts/montserrat-v29-latin-500.woff2") format("woff2"),
-    url("../fonts/montserrat-v29-latin-500.woff") format("woff"),
-    url("../fonts/montserrat-v29-latin-500.ttf") format("truetype"),
-    url("../fonts/montserrat-v29-latin-500.svg#Montserrat") format("svg");
-}
-@font-face {
   font-display: swap;
-  font-family: "Montserrat";
-  font-style: normal;
-  font-weight: 600;
-  src: url("../fonts/montserrat-v29-latin-600.eot");
-  src: url("../fonts/montserrat-v29-latin-600.eot?#iefix")
-      format("embedded-opentype"),
-    url("../fonts/montserrat-v29-latin-600.woff2") format("woff2"),
-    url("../fonts/montserrat-v29-latin-600.woff") format("woff"),
-    url("../fonts/montserrat-v29-latin-600.ttf") format("truetype"),
-    url("../fonts/montserrat-v29-latin-600.svg#Montserrat") format("svg");
 }
 
+/* Medium (500) */
 @font-face {
-  font-display: swap;
-  font-family: "Montserrat";
+  font-family: "MacPaw Fixel Display";
+  src: url("../assets/fonts/FixelDisplay-Medium.woff2") format("woff2"),
+    url("../assets/fonts/FixelDisplay-Medium.woff") format("woff"),
+    url("../assets/fonts/FixelDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
   font-style: normal;
-  font-weight: 700;
-  src: url("../fonts/montserrat-v29-latin-700.eot");
-  src: url("../fonts/montserrat-v29-latin-700.eot?#iefix")
-      format("embedded-opentype"),
-    url("../fonts/montserrat-v29-latin-700.woff2") format("woff2"),
-    url("../fonts/montserrat-v29-latin-700.woff") format("woff"),
-    url("../fonts/montserrat-v29-latin-700.ttf") format("truetype"),
-    url("../fonts/montserrat-v29-latin-700.svg#Montserrat") format("svg");
+  font-display: swap;
+}
+
+/* SemiBold (600) */
+@font-face {
+  font-family: "MacPaw Fixel Display";
+  src: url("../assets/fonts/FixelDisplay-SemiBold.woff2") format("woff2"),
+    url("../assets/fonts/FixelDisplay-SemiBold.woff") format("woff"),
+    url("../assets/fonts/FixelDisplay-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 
 :root {
-  --color-primeri-darck: #111;
-  --color-primeri-normal: #1e1823;
-  --color-primeri-orange: #fd9222;
-  --color-pink: #fcf1e0;
-  --color-light: #fafafa;
+  --color-dark: #121417;
+  --color-green: #85aa9f;
+  --color-normal-grey: #f8f8f8;
+  --color-light-grey: #fcfcfc;
   --color-white: #ffffff;
-  --color-marker-darck: #4c4c4c;
-  --color-marker-light: #eceded;
-  --color-icon-modal: #404040;
-  --color-icon-play: #f5f4f4;
-  --color-placeholder: rgba(64, 64, 64, 0.3);
 }
 /* Basse */
 
@@ -74,12 +47,12 @@
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "MacPaw Fixel Display", sans-serif;
   font-weight: 400;
-  line-height: 1.29;
-  letter-spacing: -0.02em;
-  color: var(--color-primeri-darck);
-  background-color: var(--color-light);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-dark);
+  background-color: var(--color-normal-grey);
 }
 
 h1,
@@ -95,6 +68,7 @@ p {
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 ul,

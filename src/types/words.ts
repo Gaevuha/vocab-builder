@@ -51,3 +51,19 @@ export type WordsResponseDto = {
   page: number;
   perPage: number;
 };
+
+export type WordsTableProps = {
+  words: Word[];
+  withActions?: boolean;
+  onEdit?: (word: Word) => void;
+  onDelete?: (word: Word) => void;
+  onAddToDictionary?: (word: Word) => void;
+};
+
+export type WordsPaginationProps = {
+  page: number;
+  total: number;
+  perPage: number;
+  onPageChange: (page: number) => void;
+  className?: string;
+};

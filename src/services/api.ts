@@ -1,5 +1,6 @@
 // src/services/api.ts
 import axios, { AxiosError } from "axios";
+import { loadToken, saveToken } from "../utils/storage";
 
 export class ApiError extends Error {
   status: number;
@@ -11,11 +12,11 @@ export class ApiError extends Error {
 
 // JWT зберігатимемо в localStorage
 export function setToken(token: string) {
-  localStorage.setItem("token", token);
+  saveToken(token);
 }
 
 export function getToken(): string | null {
-  return localStorage.getItem("token");
+  return loadToken();
 }
 
 export const api = axios.create({

@@ -1,37 +1,25 @@
-export type WordsPaginationProps = {
-  page: number;
-  total: number;
-  perPage: number;
-  onPageChange: (page: number) => void;
-};
+import { useBreakpoint } from "../../../hooks/useBreakpoint";
+import type { WordsPaginationProps } from "../../../types/words";
+import { WordsPaginationDesktop } from "./WordsPaginationDesktop";
+import { WordsPaginationMobile } from "./WordsPaginationMobile";
 
 export function WordsPagination({
   page,
   total,
   perPage,
   onPageChange,
+  className = "",
 }: WordsPaginationProps) {
-  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const { isDesktop } = useBreakpoint();
+  const Component = isDesktop ? WordsPaginationDesktop : WordsPaginationMobile;
 
   return (
-    <div className="pagination">
-      <button
-        type="button"
-        disabled={page <= 1}
-        onClick={() => onPageChange(page - 1)}
-      >
-        Prev
-      </button>
-      <span>
-        Page {page} of {totalPages}
-      </span>
-      <button
-        type="button"
-        disabled={page >= totalPages}
-        onClick={() => onPageChange(page + 1)}
-      >
-        Next
-      </button>
-    </div>
+    <Component
+      page={page}
+      total={total}
+      perPage={perPage}
+      onPageChange={onPageChange}
+      className={className}
+    />
   );
 }

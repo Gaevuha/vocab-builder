@@ -1,6 +1,10 @@
 export type TrainingTask = {
   id: string;
-  wordId: string;
-  prompt: string;
-  answer?: string;
+  question: string;
+};
+export type TrainingRoomProps = {
+  tasks: TrainingTask[];
+  onSubmit: (
+    answers: Array<{ taskId: string; answer: string }>
+  ) => void | Promise<void>;
 };
