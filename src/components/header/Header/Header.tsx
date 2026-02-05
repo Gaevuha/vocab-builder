@@ -1,26 +1,9 @@
-import { useState } from "react";
-import { Logo } from "../Logo/Logo";
-import { UserNav } from "../UserNav/UserNav";
-import { UserBar } from "../UserBar/UserBar";
+import { useBreakpoint } from "../../../hooks/useBreakpoint";
+import { HeaderDesktop } from "./HeaderDesktop";
+import { HeaderMobile } from "./HeaderMobile";
 
 export function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { isDesktop } = useBreakpoint();
 
-  return (
-    <header className="app-header">
-      <Logo />
-      <nav className={`app-nav ${menuOpen ? "app-nav--open" : ""}`}>
-        <UserNav onNavigate={() => setMenuOpen(false)} />
-        <UserBar />
-      </nav>
-      <button
-        className="burger"
-        type="button"
-        onClick={() => setMenuOpen((prev) => !prev)}
-        aria-label="Menu"
-      >
-        ☰
-      </button>
-    </header>
-  );
+  return isDesktop ? <HeaderDesktop /> : <HeaderMobile />;
 }

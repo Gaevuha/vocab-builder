@@ -1,7 +1,9 @@
 // src/services/auth.ts
 import { api, ApiError, setToken } from "./api";
+import { clearToken } from "../utils/storage";
 import type {
   AuthResponse,
+  AuthUser,
   LoginRequest,
   RegisterRequest,
 } from "../types/auth";
@@ -37,14 +39,18 @@ export async function logoutUser(): Promise<void> {
     if (err instanceof ApiError) throw err;
     throw new ApiError("Unknown error during logout", 500);
   } finally {
-    localStorage.removeItem("token");
+    clearToken();
   }
 }
 
-export async function getCurrentUser(): Promise<AuthResponse> {
+export async function getCurrentUser(): Promise<AuthUser> {
   try {
-    const res = await api.get<AuthResponse>("/users/current");
-    return res.data;
+    const res = await api.get<AuthResponse | AuthUser | { user: AuthUser }>(
+      "/users/current"
+    );
+    const data = res.data as AuthResponse | AuthUser | { user: AuthUser };
+    if ("user" in data) return data.user;
+    return data as AuthUser;
   } catch (err) {
     if (err instanceof ApiError) throw err;
     throw new ApiError("Failed to fetch current user", 500);

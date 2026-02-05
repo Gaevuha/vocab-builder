@@ -45,63 +45,55 @@ export function DictionaryPage() {
   const getErrorMessage = (error: unknown, fallback: string) =>
     error instanceof Error ? error.message : fallback;
 
-  /* =======================
-     Load categories
-  ======================= */
-
   useEffect(() => {
     dispatch(loadCategories());
   }, [dispatch]);
 
-  /* =======================
-     Load words
-  ======================= */
+  const loadWords = useCallback(
+    async (currentPage: number) => {
+      try {
+        setLoading(true);
+        const data = await fetchOwnWords({
+          keyword: searchQuery || undefined,
+          category: selectedCategory || undefined,
+          isIrregular:
+            selectedCategory === "verb"
+              ? selectedVerbType === "irregular"
+              : undefined,
+          page: currentPage,
+          limit: perPage,
+        });
+        dispatch(setWords({ items: data.items, total: data.total }));
+        dispatch(setPage(currentPage));
+      } catch (error) {
+        dispatch(
+          showNotification({
+            message: getErrorMessage(error, "Failed to load words"),
+            type: "error",
+          })
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [dispatch, perPage, searchQuery, selectedCategory, selectedVerbType]
+  );
 
-  const loadWords = useCallback(async () => {
-    try {
-      setLoading(true);
-
-      const data = await fetchOwnWords({
-        keyword: searchQuery || undefined,
-        category: selectedCategory || undefined,
-        isIrregular:
-          selectedCategory === "verb"
-            ? selectedVerbType === "irregular"
-            : undefined,
-        page,
-        limit: perPage,
-      });
-
-      dispatch(setWords({ items: data.items, total: data.total }));
-    } catch (error) {
-      dispatch(
-        showNotification({
-          message: getErrorMessage(error, "Failed to load words"),
-          type: "error",
-        })
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    dispatch,
-    page,
-    perPage,
-    searchQuery,
-    selectedCategory,
-    selectedVerbType,
-  ]);
-
+  // Завантаження слів при зміні фільтрів
   useEffect(() => {
-    loadWords();
-  }, [loadWords]);
+    loadWords(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, selectedCategory, selectedVerbType]);
 
-  /* =======================
-     Load statistics
-  ======================= */
-
+  // Завантаження слів при зміні сторінки
   useEffect(() => {
-    (async () => {
+    loadWords(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  // Завантаження початкових даних
+  useEffect(() => {
+    const loadInitialData = async () => {
       try {
         const stats = await fetchStatistics();
         setStatistics(stats);
@@ -115,26 +107,21 @@ export function DictionaryPage() {
           })
         );
       }
-    })();
+    };
+
+    loadInitialData();
   }, [dispatch]);
 
-  /* =======================
-     Handlers
-  ======================= */
-
   const handleSearch = (value: string) => {
-    dispatch(setPage(1));
     setSearchQuery(value);
   };
 
   const handleCategoryChange = (value: string) => {
-    dispatch(setPage(1));
     setSelectedCategory(value);
     setSelectedVerbType("");
   };
 
   const handleVerbTypeChange = (value: string) => {
-    dispatch(setPage(1));
     setSelectedVerbType(value);
   };
 
@@ -146,7 +133,7 @@ export function DictionaryPage() {
     try {
       await addWord(values);
       setShowAddModal(false);
-      loadWords();
+      loadWords(page);
       dispatch(
         showNotification({
           message: "Word added successfully",
@@ -172,7 +159,7 @@ export function DictionaryPage() {
         ua: values.ua,
       });
       setEditWord(null);
-      loadWords();
+      loadWords(page);
       dispatch(
         showNotification({
           message: "Word updated successfully",
@@ -192,7 +179,7 @@ export function DictionaryPage() {
   const handleDeleteWord = async (word: Word) => {
     try {
       await deleteWord(word.id);
-      loadWords();
+      loadWords(page);
       dispatch(
         showNotification({
           message: "Word deleted successfully",
@@ -209,48 +196,46 @@ export function DictionaryPage() {
     }
   };
 
-  /* =======================
-     Render
-  ======================= */
-
   return (
-    <div className="dictionary-page">
-      <Dashboard
-        onSearch={handleSearch}
-        onCategoryChange={handleCategoryChange}
-        onVerbTypeChange={handleVerbTypeChange}
-        onAddWord={() => setShowAddModal(true)}
-        totalWords={statistics.totalCount}
-        tasksCount={tasksCount}
-      />
+    <section className="dictionary-page">
+      <div className="container">
+        <Dashboard
+          onSearch={handleSearch}
+          onCategoryChange={handleCategoryChange}
+          onVerbTypeChange={handleVerbTypeChange}
+          onAddWord={() => setShowAddModal(true)}
+          totalWords={statistics.totalCount}
+          tasksCount={tasksCount}
+        />
 
-      {loading && <p>Loading...</p>}
+        {loading && <p>Loading...</p>}
 
-      <WordsTable
-        words={words}
-        onEdit={setEditWord}
-        onDelete={handleDeleteWord}
-      />
+        <WordsTable
+          words={words}
+          onEdit={setEditWord}
+          onDelete={handleDeleteWord}
+        />
 
-      <WordsPagination
-        page={page}
-        total={total}
-        perPage={perPage}
-        onPageChange={handlePageChange}
-      />
+        <WordsPagination
+          page={page}
+          total={total}
+          perPage={perPage}
+          onPageChange={handlePageChange}
+        />
 
-      <AddWordModal
-        isOpen={showAddModal}
-        onSubmit={handleAddWord}
-        onClose={() => setShowAddModal(false)}
-      />
+        <AddWordModal
+          isOpen={showAddModal}
+          onSubmit={handleAddWord}
+          onClose={() => setShowAddModal(false)}
+        />
 
-      <EditWordModal
-        isOpen={Boolean(editWord)}
-        word={editWord}
-        onSubmit={handleEditWord}
-        onClose={() => setEditWord(null)}
-      />
-    </div>
+        <EditWordModal
+          isOpen={Boolean(editWord)}
+          word={editWord}
+          onSubmit={handleEditWord}
+          onClose={() => setEditWord(null)}
+        />
+      </div>
+    </section>
   );
 }

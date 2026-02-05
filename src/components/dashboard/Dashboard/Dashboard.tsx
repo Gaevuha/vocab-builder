@@ -1,18 +1,7 @@
-import { Link } from "react-router-dom";
-import { routes } from "../../../app/routes";
-import { Filters } from "../Filters/Filters";
-import { Statistics } from "../Statistics/Statistics";
-import { AddWordBtn } from "../AddWordBtn/AddWordBtn";
-
-export type DashboardProps = {
-  showAddWord?: boolean;
-  onAddWord?: () => void;
-  onSearch: (value: string) => void;
-  onCategoryChange: (value: string) => void;
-  onVerbTypeChange?: (value: string) => void;
-  totalWords: number;
-  tasksCount: number;
-};
+import { useBreakpoint } from "../../../hooks/useBreakpoint";
+import type { DashboardProps } from "../../../types/dashboard";
+import { DashboardDesktop } from "./DashboardDesktop";
+import { DashboardMobile } from "./DashboardMobile";
 
 export function Dashboard({
   showAddWord = true,
@@ -23,18 +12,18 @@ export function Dashboard({
   totalWords,
   tasksCount,
 }: DashboardProps) {
+  const { isDesktop } = useBreakpoint();
+  const Component = isDesktop ? DashboardDesktop : DashboardMobile;
+
   return (
-    <section className="dashboard">
-      <Filters
-        onSearch={onSearch}
-        onCategoryChange={onCategoryChange}
-        onVerbTypeChange={onVerbTypeChange}
-      />
-      <Statistics totalWords={totalWords} tasksCount={tasksCount} />
-      <div className="dashboard-actions">
-        {showAddWord && onAddWord ? <AddWordBtn onClick={onAddWord} /> : null}
-        <Link to={routes.training}>Train oneself</Link>
-      </div>
-    </section>
+    <Component
+      showAddWord={showAddWord}
+      onAddWord={onAddWord}
+      onSearch={onSearch}
+      onCategoryChange={onCategoryChange}
+      onVerbTypeChange={onVerbTypeChange}
+      totalWords={totalWords}
+      tasksCount={tasksCount}
+    />
   );
 }
