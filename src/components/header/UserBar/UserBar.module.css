@@ -1,10 +1,20 @@
-.userName {
+.userBar {
   display: flex;
   align-items: center;
+  gap: 16px;
+}
+
+.userName {
   font-weight: 500;
+  color: var(--color-dark);
+  display: flex;
+  align-items: center;
 }
 
 .userNameMenu {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
   color: var(--color-white);
 }
 
@@ -14,21 +24,44 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  margin-left: 16px;
+  margin-left: 8px;
   border-radius: 100%;
   background-color: var(--color-green);
 }
-
 .userNameMenu .userIconWrapper {
   background-color: var(--color-white);
 }
-
 .userIcon {
   width: 20px;
   height: 20px;
-  fill: var(--color-white);
+  fill: var(--color-icon-user);
 }
 
 .userNameMenu .userIcon {
   fill: var(--color-green);
+}
+
+.btnLogout {
+  background: transparent;
+  border: none;
+  color: var(--color-dark);
+  cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+  .userIconWrapper {
+    width: 48px;
+    height: 48px;
+    margin-left: 16px;
+  }
+  .userIcon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .btnLogout {
+    color: var(--color-white);
+  }
 }

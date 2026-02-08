@@ -1,22 +1,37 @@
 import { NavLink } from "react-router-dom";
 import { routes } from "../../../app/routes";
+import styles from "./UserNav.module.css";
 
 export type UserNavProps = {
-  onNavigate?: () => void;
+  className?: string; // <-- ось тут
 };
-
-export function UserNav({ onNavigate }: UserNavProps) {
+export function UserNav({ className }: UserNavProps) {
   return (
-    <div className="user-nav">
-      <NavLink to={routes.dictionary} onClick={onNavigate}>
+    <nav className={`${styles.userNav} ${className || ""}`}>
+      <NavLink
+        to={routes.dictionary}
+        className={({ isActive }) =>
+          `${styles.navLink} ${isActive ? styles.active : ""}`
+        }
+      >
         Dictionary
       </NavLink>
-      <NavLink to={routes.recommend} onClick={onNavigate}>
+      <NavLink
+        to={routes.recommend}
+        className={({ isActive }) =>
+          `${styles.navLink} ${isActive ? styles.active : ""}`
+        }
+      >
         Recommend
       </NavLink>
-      <NavLink to={routes.training} onClick={onNavigate}>
+      <NavLink
+        to={routes.training}
+        className={({ isActive }) =>
+          `${styles.navLink} ${isActive ? styles.active : ""}`
+        }
+      >
         Training
       </NavLink>
-    </div>
+    </nav>
   );
 }

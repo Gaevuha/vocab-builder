@@ -4,6 +4,7 @@ import { UserNav } from "../UserNav/UserNav";
 import { UserName } from "../UserBar/UserBar";
 import { useAppDispatch } from "../../../store/hooks";
 import { clearCredentials } from "../../../store/slices/authSlice";
+import { LogoutButton } from "../../common/LogoutButton/LogoutButton";
 import styles from "./HeaderMobile.module.css";
 
 export function HeaderMobile() {
@@ -47,7 +48,8 @@ export function HeaderMobile() {
           </div>
         )}
       </div>
-      {menuOpen ? (
+
+      {menuOpen && (
         <>
           <button
             className={styles.backdrop}
@@ -55,32 +57,46 @@ export function HeaderMobile() {
             aria-label="Close menu"
             onClick={() => setMenuOpen(false)}
           />
+
           <nav className={styles.appNav}>
-            <div className={styles.menuHeader}>
-              <UserName variant="menu" />
-              <button
-                className={`${styles.burger} ${styles.active}`}
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
-                aria-expanded={menuOpen}
-              >
-                <span />
-                <span />
-                <span />
-              </button>
+            <div className={styles.wrapperContentMobile}>
+              {/* Верхній блок */}
+              <div className={styles.menuHeader}>
+                <UserName variant="menu" />
+                <button
+                  className={`${styles.burger} ${styles.active}`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span />
+                  <span />
+                  <span />
+                </button>
+              </div>
+
+              <UserNav className={styles.userNavMobile} />
+
+              <LogoutButton
+                className={styles.logoutButton}
+                onLogout={handleLogout}
+              />
             </div>
-            <UserNav onNavigate={() => setMenuOpen(false)} />
-            <button
-              className={styles.logoutButton}
-              type="button"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
+            <div className={styles.wrapperImgMobile}>
+              <picture>
+                <source
+                  srcSet="/img/illustration-tablet.webp 1x, /img/illustration-tablet@2x.webp 2x"
+                  media="(min-width: 768px)"
+                />
+                <img
+                  src="/img/illustration-mobile.webp"
+                  srcSet="/img/illustration-mobile.webp 1x, /img/illustration-mobile@2x.webp 2x"
+                  alt="Illustration"
+                  className={styles.imgMobileMenu}
+                />
+              </picture>
+            </div>
           </nav>
         </>
-      ) : null}
+      )}
     </header>
   );
 }

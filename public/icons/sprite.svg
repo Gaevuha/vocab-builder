@@ -7,5 +7,9 @@
 <symbol id="icon-user" viewBox="0 0 32 32">
 <path d="M15.238 0c2.021 0 3.959 0.803 5.387 2.232s2.232 3.367 2.232 5.388c0 2.021-0.803 3.959-2.232 5.387s-3.367 2.232-5.387 2.232c-2.021 0-3.959-0.803-5.387-2.232s-2.232-3.367-2.232-5.387c0-2.021 0.803-3.959 2.232-5.388s3.367-2.232 5.387-2.232zM15.238 30.476c0 0 15.238 0 15.238-3.809 0-4.572-7.429-9.524-15.238-9.524s-15.238 4.952-15.238 9.524c0 3.809 15.238 3.809 15.238 3.809z"></path>
 </symbol>
+<symbol id="icon-arrow-logout" viewBox="0 0 32 32">
+<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="3" d="M1.867 16h25.6"></path>
+<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="3" d="M19.199 6.667l9.333 9.333-9.333 9.333"></path>
+</symbol>
 </defs>
 </svg>
