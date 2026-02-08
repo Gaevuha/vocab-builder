@@ -1,0 +1,45 @@
+.userNav {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: auto;
+  width: 110px;
+  margin-bottom: 28px;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--color-white);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.active {
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 15px;
+  background-color: var(--color-light-grey);
+  color: var(--color-dark);
+}
+
+/* Desktop layout */
+@media screen and (min-width: 1440px) {
+  .userNav {
+    flex-direction: row;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .navLink {
+    color: var(--color-dark);
+  }
+
+  .active {
+    padding: 12px 20px;
+    background-color: var(--color-green);
+    color: var(--color-white);
+  }
+}

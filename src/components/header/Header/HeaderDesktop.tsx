@@ -1,15 +1,14 @@
 import { Logo } from "../Logo/Logo";
 import { UserNav } from "../UserNav/UserNav";
 import { UserBar } from "../UserBar/UserBar";
+import styles from "./HeaderDesktop.module.css";
 
 export function HeaderDesktop() {
   return (
-    <header className="app-header app-header--desktop">
+    <header className={`${styles.headerDesktop} container`}>
       <Logo />
-      <nav className="app-nav">
-        <UserNav />
-        <UserBar />
-      </nav>
+      <UserNav />
+      <UserBar />
     </header>
   );
 }

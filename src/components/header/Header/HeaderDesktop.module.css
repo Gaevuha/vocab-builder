@@ -1,0 +1,15 @@
+.headerDesktop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.navWrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 32px;
+}

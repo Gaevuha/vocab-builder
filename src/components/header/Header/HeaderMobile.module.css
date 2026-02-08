@@ -1,7 +1,6 @@
 .headerMobile {
   position: relative;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding: 16px 0;
   z-index: 950;
 }
 
@@ -16,25 +15,10 @@
   gap: 12px;
 }
 
-.appNav {
-  position: fixed;
-  inset: 0 0 0 auto;
-  width: 185px;
-  background-color: var(--color-green);
-  color: var(--color-white);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  z-index: 1000;
-  transform: translateX(100%);
-  animation: slideIn 0.3s ease forwards;
-}
-
 .wrapperUserBurger {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
 }
 
 .backdrop {
@@ -49,6 +33,106 @@
   animation: fadeIn 0.3s ease forwards;
 }
 
+.appNav {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: 185px;
+  background-color: var(--color-green);
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transform: translateX(100%);
+  animation: slideIn 0.3s ease forwards;
+}
+
+.wrapperContentMobile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px 16px 0 16px;
+}
+
+.menuHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.userNavMobile {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: auto;
+  margin-bottom: 28px;
+}
+
+.wrapperImgMobile {
+  width: 100%;
+  margin-top: auto;
+}
+
+.imgMobileMenu {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.burger {
+  width: 32px;
+  height: 22px;
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: height 0.3s ease;
+}
+
+.burger span {
+  position: absolute;
+  right: 2px;
+  height: 2px;
+  background-color: var(--color-dark);
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.burger span:nth-child(1) {
+  top: 0;
+  width: 27px;
+}
+.burger span:nth-child(2) {
+  top: 50%;
+  width: 20px;
+  transform: translateY(-50%);
+}
+.burger span:nth-child(3) {
+  bottom: 0;
+  width: 27px;
+}
+
+.burger.active {
+  height: 32px;
+}
+.burger.active span {
+  top: 50%;
+  left: 8px;
+  right: auto;
+  width: 16px;
+  background-color: #fff;
+}
+.burger.active span:nth-child(1) {
+  transform: translateY(-50%) rotate(45deg);
+}
+.burger.active span:nth-child(2) {
+  opacity: 0;
+}
+.burger.active span:nth-child(3) {
+  transform: translateY(-50%) rotate(-45deg);
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(100%);
@@ -57,11 +141,7 @@
     transform: translateX(0);
   }
 }
-
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
   to {
     opacity: 1;
   }
@@ -71,129 +151,40 @@
   .appNav {
     width: 300px;
   }
-}
-
-.menuHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.logoutButton {
-  align-self: flex-start;
-  border: 1px solid var(--color-white);
-  background: transparent;
-  color: var(--color-white);
-  padding: 8px 16px;
-  border-radius: 24px;
-}
-
-.appNav :global(.user-nav) {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  font-size: 16px;
-}
-
-.appNav :global(.user-nav a) {
-  color: var(--color-white);
-}
-
-.appNav :global(.user-nav a.active) {
-  color: var(--color-green);
-}
-
-.burger {
-  width: 32px;
-  height: 22px; /* в звичайному стані */
-  position: relative;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  display: block;
-  transition: height 0.3s ease; /* плавна зміна висоти */
-}
-
-/* ===== Bubble ===== */
-.burger::after {
-  content: "";
-  position: absolute;
-  inset: -10px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.15);
-  transform: scale(0);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.burger:active::after {
-  animation: bubble 0.4s ease-out;
-}
-
-@keyframes bubble {
-  from {
-    transform: scale(0.2);
-    opacity: 0.4;
+  .burger {
+    width: 40px;
+    height: 28px;
   }
-  to {
-    transform: scale(1.6);
-    opacity: 0;
+  .wrapperUserBurger {
+    gap: 16px;
+  }
+  .burger span {
+    height: 3px;
+    right: 7px;
+  }
+  .burger span:nth-child(1),
+  .burger span:nth-child(3) {
+    width: 33px;
+  }
+  .burger span:nth-child(2) {
+    width: 24px;
+  }
+  .burger.active {
+    height: 40px;
+  }
+  .burger.active span {
+    width: 20px;
+    left: 10px;
+  }
+  .wrapperContentMobile {
+    padding: 20px 32px 0 32px;
+  }
+  .logoutButton {
+    margin-bottom: 167px;
   }
 }
-
-/* ===== Lines ===== */
-.burger span {
-  position: absolute;
-  height: 2px;
-  border-radius: 2px;
-  background-color: var(--color-dark);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center;
-  right: 0;
-}
-
-/* Burger state (закрито) */
-.burger:not(.active) span:nth-child(1) {
-  top: 0;
-  width: 27px;
-}
-
-.burger:not(.active) span:nth-child(2) {
-  top: 50%;
-  width: 20px;
-  transform: translateY(-50%);
-}
-
-.burger:not(.active) span:nth-child(3) {
-  bottom: 0;
-  width: 27px;
-}
-
-/* Active state (відкрито - X) */
-.burger.active {
-  height: 32px; /* збільшуємо висоту до 32px */
-}
-
-.burger.active span {
-  /* Центруємо: кнопка 32px, лінія 16px, відступ (32-16)/2 = 8px */
-  left: 8px;
-  top: 50%;
-  width: 16px;
-  right: auto;
-  background-color: #ffffff;
-}
-
-.burger.active span:nth-child(1) {
-  transform: translateY(-50%) rotate(45deg);
-}
-
-.burger.active span:nth-child(2) {
-  opacity: 0;
-  transform: translateY(-50%) scale(0);
-}
-
-.burger.active span:nth-child(3) {
-  transform: translateY(-50%) rotate(-45deg);
+@media screen and (min-width: 1440px) {
+  .appNav {
+    display: none;
+  }
 }
