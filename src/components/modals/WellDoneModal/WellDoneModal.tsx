@@ -1,4 +1,4 @@
-import { Modal } from "../../common/ModalWrapper/ModalWrapper";
+import { ModalWrapper } from "../../common/ModalWrapper/ModalWrapper";
 
 export type WellDoneModalProps = {
   isOpen: boolean;
@@ -12,11 +12,11 @@ export function WellDoneModal({ isOpen, score, onClose }: WellDoneModalProps) {
   }
 
   return (
-    <Modal title="Well done!" onClose={onClose}>
-      <p>Your score: {score}</p>
+    <ModalWrapper onClose={onClose}>
+      <p>Your score: {score ?? 0}</p>
       <button type="button" onClick={onClose}>
         Close
       </button>
-    </Modal>
+    </ModalWrapper>
   );
 }

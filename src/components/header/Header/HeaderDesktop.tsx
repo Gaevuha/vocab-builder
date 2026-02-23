@@ -5,10 +5,12 @@ import styles from "./HeaderDesktop.module.css";
 
 export function HeaderDesktop() {
   return (
-    <header className={`${styles.headerDesktop} container`}>
-      <Logo />
-      <UserNav />
-      <UserBar />
+    <header className={styles.headerDesktop}>
+      <div className={`${styles.headerContainer} container`}>
+        <Logo />
+        <UserNav />
+        <UserBar />
+      </div>
     </header>
   );
 }

@@ -1,0 +1,9 @@
+.dictionaryPage {
+  padding: 32px 0 48px;
+}
+
+@media screen and (min-width: 768px) {
+  .dictionaryPage {
+    padding-top: 80px;
+  }
+  }

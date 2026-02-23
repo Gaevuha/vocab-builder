@@ -1,0 +1,83 @@
+.actionsButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  width: 12px;
+  height: 22px;
+  margin: auto;
+  cursor: pointer;
+}
+
+.iconMore {
+  width: 12px;
+  height: 22px;
+  fill: var(--color-text-statistics);
+}
+
+.editIcon,
+.deleteIcon {
+  width: 16px;
+  height: 16px;
+  stroke: var(--color-green);
+  fill: transparent;
+  margin-right: 8px;
+}
+
+.menu {
+  min-width: 117px;
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 12px 24px;
+  box-shadow: 0 4px 47px 0 rgba(18, 20, 23, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.358;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: #f1f5f9;
+}
+
+.menuArrow {
+  fill: #ffffff;
+  stroke: #e5e7eb;
+  stroke-width: 1px;
+}
+
+@media screen and (min-width: 768px) {
+  .menu {
+    min-width: 124px;
+  }
+
+  .menuItem {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .iconMore {
+    width: 14px;
+    height: 25px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .iconMore {
+    width: 16px;
+    height: 30px;
+  }
+}

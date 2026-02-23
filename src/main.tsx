@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/globals.css";
+import "izitoast/dist/css/iziToast.min.css";
 import App from "./app/App";
 import { store } from "./store/index";
 import { Provider } from "react-redux";

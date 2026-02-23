@@ -1,9 +1,7 @@
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 import type { Word } from "../../../types/words";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import * as Popover from "@radix-ui/react-popover";
+import styles from "./WordsTableActions.module.css";
 
 export type RowActionsProps = {
   word: Word;
@@ -12,40 +10,61 @@ export type RowActionsProps = {
 };
 
 export function RowActions({ word, onEdit, onDelete }: RowActionsProps) {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isOpen = Boolean(anchorEl);
-
-  const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => setAnchorEl(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleEdit = () => {
     onEdit?.(word);
-    handleClose();
+    setIsOpen(false);
   };
 
   const handleDelete = () => {
     onDelete?.(word);
-    handleClose();
+    setIsOpen(false);
   };
 
   return (
-    <>
-      <IconButton aria-label="Actions" onClick={handleOpen} size="small">
-        <MoreVertIcon fontSize="small" />
-      </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={isOpen}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-      </Menu>
-    </>
+    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+      <Popover.Trigger asChild>
+        <button
+          type="button"
+          className={styles.actionsButton}
+          aria-label="Actions"
+        >
+          <svg className={styles.iconMore}>
+            <use href="/icons/sprite.svg#icon-more-horizontal" />
+          </svg>
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          className={styles.menu}
+          side="bottom"
+          align="end"
+          sideOffset={6}
+        >
+          <button
+            type="button"
+            className={styles.menuItem}
+            onClick={handleEdit}
+          >
+            <svg className={styles.editIcon}>
+              <use href="/icons/sprite.svg#icon-edit" />
+            </svg>
+            Edit
+          </button>
+          <button
+            type="button"
+            className={styles.menuItem}
+            onClick={handleDelete}
+          >
+            <svg className={styles.deleteIcon}>
+              <use href="/icons/sprite.svg#icon-trash" />
+            </svg>
+            Delete
+          </button>
+          <Popover.Arrow className={styles.menuArrow} />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   );
 }

@@ -1,0 +1,28 @@
+.statistics {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toStudy {
+  font-size: 14px;
+  color: var(--color-text-statistics);
+}
+.totalWords {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .toStudy {
+  font-size: 16px;
+}
+}
+
+@media screen and (min-width: 1440px) {
+  .statistics {
+    margin-left: auto;
+    margin-right: 16px;
+  }
+}

@@ -1,0 +1,98 @@
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.customSelect {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+
+  border: 1px solid rgba(18, 20, 23, 0.1);
+  border-radius: 15px;
+
+  padding: 12px 24px;
+  width: 343px;
+  height: 48px;
+
+  background-color: var(--color-normal-grey);
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.customSelect:focus {
+  border-color: var(--color-green);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.3);
+}
+
+.iconSelect {
+  position: absolute;
+  right: 24px;
+  top: 14px;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.open {
+  transform: rotate(180deg);
+}
+
+.wrapperSelect {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+
+  border-radius: 15px;
+  box-shadow: 0 4px 47px 0 rgba(18, 20, 23, 0.08);
+  background: var(--color-white);
+
+  padding: 12px 6px 12px 24px;
+  z-index: 1000;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.option {
+  padding: 8px 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.option:hover {
+  color: var(--color-green);
+}
+
+.selected {
+  color: var(--color-green);
+}
+
+@media screen and (min-width: 768px) {
+  .customSelect {
+    width: 164px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .field {
+    margin-bottom: 0;
+  }
+}

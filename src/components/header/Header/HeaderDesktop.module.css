@@ -1,12 +1,14 @@
 .headerDesktop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
   padding-top: 20px;
   padding-bottom: 20px;
+  background-color: var(--color-white);
 }
 
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .navWrapper {
   display: flex;
   align-items: center;

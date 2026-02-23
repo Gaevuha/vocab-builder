@@ -1,0 +1,118 @@
+.trainingRoom {
+  background: var(--color-white);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.trainingRoomDesktop {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 240px;
+}
+
+.trainingRoomMobile {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  padding: 20px;
+}
+
+.sectionAnswer {
+  border-bottom: 1px solid #eef2f7;
+}
+
+.left {
+  padding: 20px;
+}
+
+.right {
+  padding: 20px;
+}
+
+.task {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  min-height: 40px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.nextButton {
+  border: none;
+  background: transparent;
+  color: var(--color-green);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.saveButton {
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: var(--color-green);
+  color: #ffffff;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.saveButton:hover {
+  background: #74988f;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.fieldInput {
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.fieldError {
+  color: #ef4444;
+  font-size: 12px;
+}
+
+/* hint removed per design */
+
+/* Mobile footer styling for Save / Cancel */
+.mobileFooter {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.trainingRoomMobile .saveButton {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 999px;
+  font-size: 16px;
+}
+
+.cancelButton {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+}

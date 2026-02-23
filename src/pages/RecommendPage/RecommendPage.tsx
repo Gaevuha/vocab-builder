@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Dashboard } from "../../components/dashboard/Dashboard/Dashboard";
 import { WordsTable } from "../../components/common/WordsTable/WordsTable";
 import { WordsPagination } from "../../components/common/WordsPagination/WordsPagination";
@@ -13,6 +13,7 @@ import {
   fetchStatistics,
 } from "../../services/words";
 import { fetchTrainingTasks } from "../../services/training";
+import styles from "./RecommendPage.module.css";
 
 export function RecommendPage() {
   const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ export function RecommendPage() {
   });
   const [tasksCount, setTasksCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const requestIdRef = useRef(0);
 
   const getErrorMessage = (error: unknown, fallback: string) =>
     error instanceof Error ? error.message : fallback;
@@ -34,43 +36,60 @@ export function RecommendPage() {
     dispatch(loadCategories());
   }, [dispatch]);
 
-  const loadWords = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await fetchAllWords({
-        keyword: searchQuery || undefined,
-        category: selectedCategory || undefined,
-        isIrregular:
-          selectedCategory === "verb"
-            ? selectedVerbType === "irregular"
-            : undefined,
-        page: wordsState.page,
-        limit: wordsState.perPage,
-      });
+  const loadWords = useCallback(
+    async (currentPage: number) => {
+      const requestId = requestIdRef.current + 1;
+      requestIdRef.current = requestId;
+      try {
+        setLoading(true);
+        const data = await fetchAllWords({
+          keyword: searchQuery || undefined,
+          category: selectedCategory || undefined,
+          isIrregular:
+            selectedCategory === "verb"
+              ? selectedVerbType === "irregular"
+              : undefined,
+          page: currentPage,
+          limit: wordsState.perPage,
+        });
 
-      dispatch(setWords({ items: data.items, total: data.total }));
-    } catch (error) {
-      dispatch(
-        showNotification({
-          message: getErrorMessage(error, "Failed to load words"),
-          type: "error",
-        })
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    dispatch,
-    searchQuery,
-    selectedCategory,
-    selectedVerbType,
-    wordsState.page,
-    wordsState.perPage,
-  ]);
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+
+        dispatch(
+          setWords({
+            items: data.items,
+            totalPages: data.totalPages,
+            perPage: data.perPage,
+          })
+        );
+      } catch (error) {
+        dispatch(
+          showNotification({
+            message: getErrorMessage(error, "Failed to load words"),
+            type: "error",
+          })
+        );
+      } finally {
+        if (requestId === requestIdRef.current) {
+          setLoading(false);
+        }
+      }
+    },
+    [
+      dispatch,
+      searchQuery,
+      selectedCategory,
+      selectedVerbType,
+      wordsState.perPage,
+    ]
+  );
 
   useEffect(() => {
-    loadWords();
-  }, [loadWords]);
+    dispatch(setPage(1));
+    loadWords(1);
+  }, [dispatch, loadWords]);
 
   useEffect(() => {
     (async () => {
@@ -91,18 +110,15 @@ export function RecommendPage() {
   }, [dispatch]);
 
   const handleSearch = (value: string) => {
-    dispatch(setPage(1));
     setSearchQuery(value);
   };
 
   const handleCategoryChange = (value: string) => {
-    dispatch(setPage(1));
     setSelectedCategory(value);
     setSelectedVerbType("");
   };
 
   const handleVerbTypeChange = (value: string) => {
-    dispatch(setPage(1));
     setSelectedVerbType(value);
   };
 
@@ -126,28 +142,32 @@ export function RecommendPage() {
   }
 
   return (
-    <section className="page">
-      <h1>Recommend</h1>
-      <Dashboard
-        showAddWord={false}
-        onSearch={handleSearch}
-        onCategoryChange={handleCategoryChange}
-        onVerbTypeChange={handleVerbTypeChange}
-        totalWords={statistics.totalCount}
-        tasksCount={tasksCount}
-      />
-      {loading && <p>Loading...</p>}
-      <WordsTable
-        words={wordsState.items}
-        withActions={false}
-        onAddToDictionary={handleAddToDictionary}
-      />
-      <WordsPagination
-        page={wordsState.page}
-        total={wordsState.total}
-        perPage={wordsState.perPage}
-        onPageChange={(page) => dispatch(setPage(page))}
-      />
+    <section className={styles.recommendPage}>
+      <div className="container">
+        <Dashboard
+          showAddWord={false}
+          onSearch={handleSearch}
+          onCategoryChange={handleCategoryChange}
+          onVerbTypeChange={handleVerbTypeChange}
+          totalWords={statistics.totalCount}
+          tasksCount={tasksCount}
+        />
+        {loading && wordsState.items.length === 0 && <p>Loading...</p>}
+        <WordsTable
+          words={wordsState.items}
+          withActions={false}
+          onAddToDictionary={handleAddToDictionary}
+          tableMode="recommend"
+        />
+        <WordsPagination
+          page={wordsState.page}
+          totalPages={wordsState.totalPages}
+          onPageChange={(page) => {
+            dispatch(setPage(page));
+            loadWords(page);
+          }}
+        />
+      </div>
     </section>
   );
 }

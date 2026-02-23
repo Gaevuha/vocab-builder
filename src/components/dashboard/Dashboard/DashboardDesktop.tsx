@@ -4,6 +4,7 @@ import { Filters } from "../Filters/Filters";
 import { Statistics } from "../Statistics/Statistics";
 import { AddWordBtn } from "../AddWordBtn/AddWordBtn";
 import type { DashboardProps } from "../../../types/dashboard";
+import styles from "./DashboardDesktop.module.css";
 
 export function DashboardDesktop({
   showAddWord = true,
@@ -15,17 +16,22 @@ export function DashboardDesktop({
   tasksCount,
 }: DashboardProps) {
   return (
-    <section className="dashboard dashboard--desktop">
+    <div className={styles.dashboardWrapper}>
       <Filters
         onSearch={onSearch}
         onCategoryChange={onCategoryChange}
         onVerbTypeChange={onVerbTypeChange}
       />
       <Statistics totalWords={totalWords} tasksCount={tasksCount} />
-      <div className="dashboard-actions">
+      <div className={styles.dashboardActions}>
         {showAddWord && onAddWord ? <AddWordBtn onClick={onAddWord} /> : null}
-        <Link to={routes.training}>Train oneself</Link>
+        <Link to={routes.training} className={styles.trainingLink}>
+          Train oneself
+          <svg className={styles.arrowLinkIcon}>
+            <use xlinkHref="/icons/sprite.svg#icon-arrow-right" />
+          </svg>
+        </Link>
       </div>
-    </section>
+    </div>
   );
 }
