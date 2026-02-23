@@ -1,24 +1,26 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useState } from "react";
-import type { TrainingTask } from "../types/training";
-import type { TrainingRoomProps } from "../types/training";
+import { useEffect, useState } from "react";
+import type {
+  TrainingAnswer,
+  TrainingTask,
+  TrainingRoomProps,
+} from "../types/training";
+import { useAppDispatch } from "../store/hooks";
+import { setProgress } from "../store/slices/trainingSlice";
+import iziToast from "izitoast";
 
-const answerSchema = yup.object({
-  answer: yup.string().required("Answer is required"),
-});
-
-type AnswerFormValues = yup.InferType<typeof answerSchema>;
+type AnswerFormValues = {
+  answer: string;
+};
 
 export function useTrainingRoomState(
   tasks: TrainingTask[],
-  onSubmit: TrainingRoomProps["onSubmit"]
+  onSubmit: TrainingRoomProps["onSubmit"],
+  onPartialSubmit?: TrainingRoomProps["onPartialSubmit"]
 ) {
   const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<
-    Array<{ taskId: string; answer: string }>
-  >([]);
+  const [answers, setAnswers] = useState<TrainingAnswer[]>([]);
+  const dispatch = useAppDispatch();
 
   const task = tasks[index];
   const isLast = index >= tasks.length - 1;
@@ -27,25 +29,70 @@ export function useTrainingRoomState(
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
-  } = useForm<AnswerFormValues>({
-    resolver: yupResolver(answerSchema),
-    mode: "onSubmit",
-  });
+  } = useForm<AnswerFormValues>({ mode: "onSubmit" });
 
-  const handleNext: SubmitHandler<AnswerFormValues> = (data) => {
+  useEffect(() => {
+    dispatch(setProgress(answers.length));
+  }, [answers.length, dispatch]);
+
+  const upsertAnswer = (
+    prev: TrainingAnswer[],
+    next: TrainingAnswer
+  ): TrainingAnswer[] => {
+    const filtered = prev.filter((a) => a.taskIndex !== next.taskIndex);
+    return [...filtered, next];
+  };
+
+  const handleNext = () => {
     if (!task) return;
-    setAnswers((prev) => [...prev, { taskId: task.id, answer: data.answer }]);
+
+    const value = getValues("answer")?.trim();
+    if (!value) return;
+
+    const newAnswer: TrainingAnswer = {
+      taskId: task.id,
+      taskIndex: index,
+      answer: value,
+    };
+
+    // 🔹 оновлений масив для submit
+    const updated = upsertAnswer(answers, newAnswer);
+    setAnswers(updated);
+
+    if (onPartialSubmit) {
+      Promise.resolve(onPartialSubmit(updated)).catch(() => {
+        iziToast.error({
+          title: "Error",
+          message: "Current progress was not saved",
+          position: "topCenter",
+        });
+      });
+    }
+
     reset();
     setIndex((prev) => prev + 1);
   };
 
-  const handleSave: SubmitHandler<AnswerFormValues> = (data) => {
+  const handleSave: SubmitHandler<AnswerFormValues> = async (data) => {
     if (!task) return;
-    const allAnswers = data.answer.trim()
-      ? [...answers, { taskId: task.id, answer: data.answer }]
-      : answers;
-    onSubmit(allAnswers);
+
+    const value = data.answer.trim();
+    let updated = answers;
+
+    if (value) {
+      const newAnswer: TrainingAnswer = {
+        taskId: task.id,
+        taskIndex: index,
+        answer: value,
+      };
+
+      updated = upsertAnswer(answers, newAnswer);
+      setAnswers(updated);
+    }
+
+    await Promise.resolve(onSubmit(updated));
   };
 
   return {
@@ -56,5 +103,6 @@ export function useTrainingRoomState(
     errors,
     handleNext,
     handleSave,
+    answers,
   };
 }

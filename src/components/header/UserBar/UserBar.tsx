@@ -12,18 +12,17 @@ type UserNameProps = {
 
 export function UserName({ variant = "default" }: UserNameProps) {
   const user = useAppSelector((state) => state.auth.user);
-  const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
 
   const displayName = user?.name?.trim().split(/\s+/)[0] ?? "User";
 
   useEffect(() => {
-    if (!user && token) {
+    if (!user) {
       getCurrentUser()
         .then((currentUser) => dispatch(setUser(currentUser)))
         .catch(() => dispatch(clearCredentials()));
     }
-  }, [dispatch, token, user]);
+  }, [dispatch, user]);
 
   return (
     <span

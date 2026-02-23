@@ -1,0 +1,9 @@
+.trainingPage {
+  padding: 24px 0 48px;
+}
+
+.trainingProgress {
+  display: flex;
+  justify-content: flex-end;
+  margin: 12px 0 16px;
+}

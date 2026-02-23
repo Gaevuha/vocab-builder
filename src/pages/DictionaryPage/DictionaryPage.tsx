@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loadCategories } from "../../store/slices/categoriesSlice";
 import { setWords, setPage } from "../../store/slices/wordsSlice";
@@ -20,13 +21,15 @@ import { WordsTable } from "../../components/common/WordsTable/WordsTable";
 import { WordsPagination } from "../../components/common/WordsPagination/WordsPagination";
 import { AddWordModal } from "../../components/modals/AddWordModal/AddWordModal";
 import { EditWordModal } from "../../components/modals/EditWordModal/EditWordModal";
+import styles from "./DictionaryPage.module.css";
 
 export function DictionaryPage() {
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const {
     items: words,
-    total,
+    totalPages,
     page,
     perPage,
   } = useAppSelector((state) => state.words);
@@ -41,6 +44,7 @@ export function DictionaryPage() {
   });
   const [tasksCount, setTasksCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const requestIdRef = useRef(0);
 
   const getErrorMessage = (error: unknown, fallback: string) =>
     error instanceof Error ? error.message : fallback;
@@ -49,8 +53,18 @@ export function DictionaryPage() {
     dispatch(loadCategories());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (searchParams.get("add") === "1") {
+      setShowAddModal(true);
+      searchParams.delete("add");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   const loadWords = useCallback(
     async (currentPage: number) => {
+      const requestId = requestIdRef.current + 1;
+      requestIdRef.current = requestId;
       try {
         setLoading(true);
         const data = await fetchOwnWords({
@@ -63,8 +77,16 @@ export function DictionaryPage() {
           page: currentPage,
           limit: perPage,
         });
-        dispatch(setWords({ items: data.items, total: data.total }));
-        dispatch(setPage(currentPage));
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+        dispatch(
+          setWords({
+            items: data.items,
+            totalPages: data.totalPages,
+            perPage: data.perPage,
+          })
+        );
       } catch (error) {
         dispatch(
           showNotification({
@@ -73,25 +95,19 @@ export function DictionaryPage() {
           })
         );
       } finally {
-        setLoading(false);
+        if (requestId === requestIdRef.current) {
+          setLoading(false);
+        }
       }
     },
     [dispatch, perPage, searchQuery, selectedCategory, selectedVerbType]
   );
 
-  // Завантаження слів при зміні фільтрів
   useEffect(() => {
+    dispatch(setPage(1));
     loadWords(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, selectedCategory, selectedVerbType]);
+  }, [dispatch, loadWords]);
 
-  // Завантаження слів при зміні сторінки
-  useEffect(() => {
-    loadWords(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  // Завантаження початкових даних
   useEffect(() => {
     const loadInitialData = async () => {
       try {
@@ -127,53 +143,23 @@ export function DictionaryPage() {
 
   const handlePageChange = (newPage: number) => {
     dispatch(setPage(newPage));
+    loadWords(newPage);
   };
 
   const handleAddWord = async (values: CreateWordPayload) => {
-    try {
-      await addWord(values);
-      setShowAddModal(false);
-      loadWords(page);
-      dispatch(
-        showNotification({
-          message: "Word added successfully",
-          type: "success",
-        })
-      );
-    } catch (error) {
-      dispatch(
-        showNotification({
-          message: getErrorMessage(error, "Failed to add word"),
-          type: "error",
-        })
-      );
-    }
+    await addWord(values);
+    loadWords(page);
   };
 
   const handleEditWord = async (values: EditWordFormValues) => {
     if (!editWord) return;
-
-    try {
-      await updateWord(editWord.id, {
-        en: values.en,
-        ua: values.ua,
-      });
-      setEditWord(null);
-      loadWords(page);
-      dispatch(
-        showNotification({
-          message: "Word updated successfully",
-          type: "success",
-        })
-      );
-    } catch (error) {
-      dispatch(
-        showNotification({
-          message: getErrorMessage(error, "Failed to update word"),
-          type: "error",
-        })
-      );
-    }
+    await updateWord(editWord.id, {
+      en: values.en,
+      ua: values.ua,
+      category: editWord.category,
+      isIrregular: editWord.isIrregular,
+    });
+    await loadWords(page);
   };
 
   const handleDeleteWord = async (word: Word) => {
@@ -197,7 +183,7 @@ export function DictionaryPage() {
   };
 
   return (
-    <section className="dictionary-page">
+    <section className={styles.dictionaryPage}>
       <div className="container">
         <Dashboard
           onSearch={handleSearch}
@@ -208,7 +194,7 @@ export function DictionaryPage() {
           tasksCount={tasksCount}
         />
 
-        {loading && <p>Loading...</p>}
+        {loading && words.length === 0 && <p>Loading...</p>}
 
         <WordsTable
           words={words}
@@ -218,8 +204,7 @@ export function DictionaryPage() {
 
         <WordsPagination
           page={page}
-          total={total}
-          perPage={perPage}
+          totalPages={totalPages}
           onPageChange={handlePageChange}
         />
 

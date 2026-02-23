@@ -1,0 +1,15 @@
+.addWordBtn {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  border: none;
+  background-color: transparent;
+}
+.addWordIcon {
+  margin-left: 8px;
+  width: 20px;
+  height: 20px;
+  stroke: var(--color-green);
+}

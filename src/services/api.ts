@@ -1,4 +1,3 @@
-// src/services/api.ts
 import axios, { AxiosError } from "axios";
 import { loadToken, saveToken } from "../utils/storage";
 
@@ -10,7 +9,6 @@ export class ApiError extends Error {
   }
 }
 
-// JWT зберігатимемо в localStorage
 export function setToken(token: string) {
   saveToken(token);
 }
@@ -19,12 +17,14 @@ export function getToken(): string | null {
   return loadToken();
 }
 
+const useCredentials = import.meta.env.VITE_USE_CREDENTIALS === "true";
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // твій бекенд
+  baseURL: import.meta.env.VITE_API_URL,
   headers: { "Content-Type": "application/json" },
+  withCredentials: useCredentials,
 });
 
-// Додаємо токен у всі запити
 api.interceptors.request.use((config) => {
   const token = getToken();
   if (token) {

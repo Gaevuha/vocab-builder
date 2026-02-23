@@ -1,0 +1,177 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+
+  border: 1px solid rgba(18, 20, 23, 0.1);
+  border-radius: 15px;
+
+  padding: 12px 56px 12px 24px;
+  width: 343px;
+  height: 48px;
+  background-color: var(--color-normal-grey);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input::placeholder {
+  color: var(--color-dark);
+}
+
+.input:focus {
+  border-color: var(--color-green);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.3);
+}
+
+.iconSearch {
+  position: absolute;
+  right: 24px;
+  top: 14px;
+  width: 20px;
+  height: 20px;
+  fill: var(--color-normal-grey);
+  stroke: var(--color-dark);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.radioGroup {
+  display: flex;
+  gap: 16px;
+}
+
+.radioItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.radioIcon {
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  border: 2px solid rgba(18, 20, 23, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.radioIcon::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.radioInput:checked + .radioLabel .radioIcon {
+  border-color: var(--color-green);
+}
+
+.radioInput:checked + .radioLabel .radioIcon::after {
+  background-color: var(--color-green);
+}
+
+/* Chrome, Edge, Safari */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-normal-grey) inset !important;
+  -webkit-text-fill-color: var(--color-dark) !important;
+  caret-color: var(--color-dark) !important;
+  border: 1px solid rgba(18, 20, 23, 0.1) !important;
+  background-color: var(--color-normal-grey) !important;
+}
+
+/* Firefox */
+.input:-moz-autofill {
+  box-shadow: 0 0 0 1000px var(--color-normal-grey) inset !important;
+  -moz-text-fill-color: var(--color-dark) !important;
+  caret-color: var(--color-dark) !important;
+  background-color: var(--color-normal-grey) !important;
+}
+
+@media screen and (min-width: 768px) {
+  .filters {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .input {
+    width: 274px;
+  }
+
+  .radioLabel {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .filters {
+    margin-bottom: 0;
+  }
+}

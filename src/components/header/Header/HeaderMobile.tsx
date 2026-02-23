@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Logo } from "../Logo/Logo";
 import { UserNav } from "../UserNav/UserNav";
 import { UserName } from "../UserBar/UserBar";
@@ -10,6 +11,8 @@ import styles from "./HeaderMobile.module.css";
 export function HeaderMobile() {
   const [menuOpen, setMenuOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const prevPathname = useRef(location.pathname);
 
   const handleLogout = () => {
     dispatch(clearCredentials());
@@ -25,78 +28,87 @@ export function HeaderMobile() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (prevPathname.current !== location.pathname) {
+      setMenuOpen(false);
+      prevPathname.current = location.pathname;
+    }
+  }, [location.pathname]);
+
   return (
-    <header className={`${styles.headerMobile} container`}>
-      <div
-        className={`${styles.topBar} ${menuOpen ? styles.headerDimmed : ""}`}
-      >
-        <Logo />
-        {!menuOpen && (
-          <div className={styles.wrapperUserBurger}>
-            <UserName />
+    <header className={styles.headerMobile}>
+      <div className="container">
+        <div
+          className={`${styles.topBar} ${menuOpen ? styles.headerDimmed : ""}`}
+        >
+          <Logo />
+          {!menuOpen && (
+            <div className={styles.wrapperUserBurger}>
+              <UserName />
+              <button
+                className={styles.burger}
+                type="button"
+                onClick={() => setMenuOpen(true)}
+                aria-label="Menu"
+                aria-expanded={menuOpen}
+              >
+                <span />
+                <span />
+                <span />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {menuOpen && (
+          <>
             <button
-              className={styles.burger}
+              className={styles.backdrop}
               type="button"
-              onClick={() => setMenuOpen(true)}
-              aria-label="Menu"
-              aria-expanded={menuOpen}
-            >
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+            />
+
+            <nav className={styles.appNav}>
+              <div className={styles.wrapperContentMobile}>
+                {/* Верхній блок */}
+                <div className={styles.menuHeader}>
+                  <UserName variant="menu" />
+                  <button
+                    className={`${styles.burger} ${styles.active}`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span />
+                    <span />
+                    <span />
+                  </button>
+                </div>
+
+                <UserNav className={styles.userNavMobile} />
+
+                <LogoutButton
+                  className={styles.logoutButton}
+                  onLogout={handleLogout}
+                />
+              </div>
+              <div className={styles.wrapperImgMobile}>
+                <picture>
+                  <source
+                    srcSet="/img/illustration-tablet.webp 1x, /img/illustration-tablet@2x.webp 2x"
+                    media="(min-width: 768px)"
+                  />
+                  <img
+                    src="/img/illustration-mobile.webp"
+                    srcSet="/img/illustration-mobile.webp 1x, /img/illustration-mobile@2x.webp 2x"
+                    alt="Illustration"
+                    className={styles.imgMobileMenu}
+                  />
+                </picture>
+              </div>
+            </nav>
+          </>
         )}
       </div>
-
-      {menuOpen && (
-        <>
-          <button
-            className={styles.backdrop}
-            type="button"
-            aria-label="Close menu"
-            onClick={() => setMenuOpen(false)}
-          />
-
-          <nav className={styles.appNav}>
-            <div className={styles.wrapperContentMobile}>
-              {/* Верхній блок */}
-              <div className={styles.menuHeader}>
-                <UserName variant="menu" />
-                <button
-                  className={`${styles.burger} ${styles.active}`}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  <span />
-                  <span />
-                  <span />
-                </button>
-              </div>
-
-              <UserNav className={styles.userNavMobile} />
-
-              <LogoutButton
-                className={styles.logoutButton}
-                onLogout={handleLogout}
-              />
-            </div>
-            <div className={styles.wrapperImgMobile}>
-              <picture>
-                <source
-                  srcSet="/img/illustration-tablet.webp 1x, /img/illustration-tablet@2x.webp 2x"
-                  media="(min-width: 768px)"
-                />
-                <img
-                  src="/img/illustration-mobile.webp"
-                  srcSet="/img/illustration-mobile.webp 1x, /img/illustration-mobile@2x.webp 2x"
-                  alt="Illustration"
-                  className={styles.imgMobileMenu}
-                />
-              </picture>
-            </div>
-          </nav>
-        </>
-      )}
     </header>
   );
 }

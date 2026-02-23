@@ -11,7 +11,8 @@ export type Word = {
 
 export type WordsResponse = {
   items: Word[];
-  total: number;
+  totalPages: number;
+  perPage: number;
 };
 
 export type FetchWordsParams = {
@@ -36,6 +37,8 @@ export type CreateWordPayload = {
 export type UpdateWordPayload = {
   en: string;
   ua: string;
+  category?: Category;
+  isIrregular?: boolean;
 };
 export type WordDto = {
   _id: string;
@@ -58,12 +61,12 @@ export type WordsTableProps = {
   onEdit?: (word: Word) => void;
   onDelete?: (word: Word) => void;
   onAddToDictionary?: (word: Word) => void;
+  tableMode?: "dictionary" | "recommend";
 };
 
 export type WordsPaginationProps = {
   page: number;
-  total: number;
-  perPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
 };

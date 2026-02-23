@@ -3,11 +3,23 @@ import type { TrainingRoomProps } from "../../types/training";
 import { TrainingRoomDesktop } from "./TrainingRoomDesktop";
 import { TrainingRoomMobile } from "./TrainingRoomMobile";
 
-export function TrainingRoom({ tasks, onSubmit }: TrainingRoomProps) {
+export function TrainingRoom({
+  tasks,
+  onSubmit,
+  onPartialSubmit,
+}: TrainingRoomProps) {
   const { isDesktop } = useBreakpoint();
   return isDesktop ? (
-    <TrainingRoomDesktop tasks={tasks} onSubmit={onSubmit} />
+    <TrainingRoomDesktop
+      tasks={tasks}
+      onSubmit={onSubmit}
+      onPartialSubmit={onPartialSubmit}
+    />
   ) : (
-    <TrainingRoomMobile tasks={tasks} onSubmit={onSubmit} />
+    <TrainingRoomMobile
+      tasks={tasks}
+      onSubmit={onSubmit}
+      onPartialSubmit={onPartialSubmit}
+    />
   );
 }

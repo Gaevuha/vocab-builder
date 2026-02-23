@@ -1,19 +1,15 @@
+import styles from "./Statistics.module.css";
+
 export type StatisticsProps = {
   totalWords: number;
   tasksCount: number;
 };
 
-export function Statistics({ totalWords, tasksCount }: StatisticsProps) {
+export function Statistics({ totalWords }: StatisticsProps) {
   return (
-    <div className="statistics">
-      <div>
-        <strong>{totalWords}</strong>
-        <span>Words to learn</span>
-      </div>
-      <div>
-        <strong>{tasksCount}</strong>
-        <span>Training tasks</span>
-      </div>
+    <div className={styles.statistics}>
+      <span className={styles.toStudy}>To study:</span>
+      <span className={styles.totalWords}>{totalWords}</span>
     </div>
   );
 }

@@ -1,0 +1,18 @@
+.progressBar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progressBar :global(.CircularProgressbar-path) {
+  stroke: #2bd627;
+  stroke-linecap: round;
+}
+
+.progressBar :global(.CircularProgressbar-trail) {
+  stroke: #d4f8d3;
+}
+
+.progressBar :global(.CircularProgressbar-text) {
+  fill: #64748b;
+}

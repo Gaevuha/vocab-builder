@@ -1,4 +1,4 @@
-// src/components/common/WordsTable/WordsTableDesktop.tsx
+// src/components/common/WordsTable/WordsTableTablet.tsx
 import { useMemo } from "react";
 import type { Row } from "@tanstack/react-table";
 import {
@@ -10,9 +10,9 @@ import {
 import type { Word, WordsTableProps } from "../../../types/words";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { RowActions } from "./WordsTableActions";
-import styles from "./WordsTableDesktop.module.css";
+import styles from "./WordsTableTablet.module.css";
 
-export function WordsTableDesktop({
+export function WordsTableTablet({
   words,
   withActions = true,
   onEdit,
@@ -131,24 +131,24 @@ export function WordsTableDesktop({
   return (
     <div className={styles.tableWrapper}>
       {words.length === 0 ? (
-        <div className={styles.emptyBlock}>No words found</div>
+        <div className={styles.emptyBlock}>No words found!</div>
       ) : (
         <table className={styles.table}>
           <colgroup>
             {tableMode === "recommend" ? (
               <>
-                <col style={{ width: "372px" }} />
-                <col style={{ width: "364px" }} />
-                <col style={{ width: "260px" }} />
-                <col style={{ width: "208px" }} />
+                <col style={{ width: "180px" }} />
+                <col style={{ width: "180px" }} />
+                <col style={{ width: "160px" }} />
+                <col style={{ width: "148px" }} />
               </>
             ) : (
               <>
-                <col style={{ width: "280px" }} />
-                <col style={{ width: "274px" }} />
-                <col style={{ width: "260px" }} />
-                <col style={{ width: "254px" }} />
-                <col style={{ width: "136px" }} />
+                <col style={{ width: "160px" }} />
+                <col style={{ width: "169px" }} />
+                <col style={{ width: "151px" }} />
+                <col style={{ width: "122px" }} />
+                <col style={{ width: "66px" }} />
               </>
             )}
           </colgroup>

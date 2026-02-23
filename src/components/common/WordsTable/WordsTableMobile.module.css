@@ -1,0 +1,83 @@
+.tableWrapper {
+  width: 100%;
+  background: var(--color-white);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.table thead th {
+  text-align: left;
+  padding: 14px 16px;
+  font-weight: 500;
+  color: var(--color-dark);
+  background-color: var(--bg-header-table);
+  border-bottom: 1px solid #dbdbdb;
+}
+.thWithBorder {
+  border-right: 1px solid #dbdbdb;
+}
+.progressCell {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+.table tbody td {
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-dark);
+  height: 70px;
+  border-bottom: 1px solid #dbdbdb;
+  vertical-align: top;
+  text-align: left;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tdWithBorder {
+  border-right: 1px solid #dbdbdb;
+}
+
+/* Кнопка Add to dictionary */
+.buttonAdd {
+  padding: 10px 16px;
+  background-color: #111827;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.buttonAdd:hover {
+  background-color: #0b1220;
+}
+
+.emptyBlock {
+  width: 100%;
+  text-align: center;
+  padding: 40px 0;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: var(--color-normal-grey);
+  color: var(--color-dark);
+}

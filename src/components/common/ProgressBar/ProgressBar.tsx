@@ -1,30 +1,68 @@
-import LinearProgress from "@mui/material/LinearProgress";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { useEffect, useRef } from "react";
+import "react-circular-progressbar/dist/styles.css";
+import { CircularProgressbar } from "react-circular-progressbar";
+import styles from "./ProgressBar.module.css";
 
 export type ProgressBarProps = {
   value: number;
   max: number;
+  size?: number;
+  strokeWidth?: number;
+  showValue?: boolean;
+  className?: string;
 };
 
-export function ProgressBar({ value, max }: ProgressBarProps) {
+export function ProgressBar({
+  value,
+  max,
+  size = 32,
+  strokeWidth = 10,
+  showValue = false,
+  className,
+}: ProgressBarProps) {
+  const parsedValue = Number(value);
+  const parsedMax = Number(max);
+  const safeValue = Number.isFinite(parsedValue) ? parsedValue : 0;
+  const safeMax = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 0;
   const percentage =
-    max === 0 ? 0 : Math.min(100, Math.round((value / max) * 100));
+    safeMax === 0 ? 0 : Math.min(100, Math.round((safeValue / safeMax) * 100));
+  const loggedRef = useRef(false);
+
+  useEffect(() => {
+    if (import.meta.env.DEV && !loggedRef.current) {
+      loggedRef.current = true;
+      console.debug("ProgressBar", {
+        value,
+        max,
+        safeValue,
+        safeMax,
+        percentage,
+      });
+    }
+  }, [value, max, safeValue, safeMax, percentage]);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Box sx={{ width: "100%" }}>
-        <LinearProgress
-          variant="determinate"
-          value={percentage}
-          aria-valuenow={percentage}
-          aria-valuemin={0}
-          aria-valuemax={100}
-        />
-      </Box>
-      <Typography variant="body2" color="text.secondary">
-        {percentage}%
-      </Typography>
-    </Box>
+    <div
+      className={`${styles.progressBar} ${className ?? ""}`.trim()}
+      style={{ width: size, height: size }}
+      role="img"
+      aria-label={`Progress ${percentage}%`}
+    >
+      <CircularProgressbar
+        value={safeValue}
+        maxValue={safeMax || 100}
+        strokeWidth={strokeWidth}
+        text={showValue ? `${percentage}%` : ""}
+        styles={{
+          path: {
+            stroke: "#2bd627",
+            strokeLinecap: "round",
+            transition: "stroke-dashoffset 0.3s ease",
+          },
+          trail: { stroke: "#d4f8d3" },
+          text: { fill: "#64748b", fontSize: "28px" },
+        }}
+      />
+    </div>
   );
 }
