@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { PasswordField } from "../../common/PasswordField/PasswordField";
 import { loginSchema } from "../../../utils/validation";
+import { Link } from "react-router-dom";
 
 export type LoginFormValues = {
   email: string;
@@ -44,6 +45,7 @@ export function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
       <button type="submit" disabled={isLoading}>
         Login
       </button>
+      <Link to="/register">Register</Link>
     </form>
   );
 }

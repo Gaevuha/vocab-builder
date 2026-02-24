@@ -30,7 +30,7 @@ export function HeaderMobile() {
 
   useEffect(() => {
     if (prevPathname.current !== location.pathname) {
-      setMenuOpen(false);
+      setTimeout(() => setMenuOpen(false), 0);
       prevPathname.current = location.pathname;
     }
   }, [location.pathname]);

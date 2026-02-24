@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   LoginForm,
   type LoginFormValues,
@@ -8,8 +8,9 @@ import { loginUser } from "../../services/auth";
 import { useAppDispatch } from "../../store/hooks";
 import { setCredentials } from "../../store/slices/authSlice";
 import { showNotification } from "../../store/slices/uiSlice";
-import { Notification } from "../../components/common/Notification/Notification";
 import { useState } from "react";
+import styles from "./LoginPage.module.css";
+import { Logo } from "../../components/header/Logo/Logo";
 
 export function LoginPage() {
   const dispatch = useAppDispatch();
@@ -31,13 +32,30 @@ export function LoginPage() {
   }
 
   return (
-    <div className="auth-page">
-      <h1>Login</h1>
-      <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
-      <p>
-        Don’t have an account? <Link to={routes.register}>Register</Link>
-      </p>
-      <Notification />
-    </div>
+    <section className={styles.sectionLoginPage}>
+      <div className={`${styles.containerLoginPage} container`}>
+        <Logo />
+        <div className={styles.wrapperImgMobile}>
+          <picture>
+            <source
+              srcSet="/img/login-page.webp 1x, /img/login-page@2x.webp 2x"
+              media="(min-width: 1440px)"
+            />
+            <img
+              src="/img/login-page-mobile.webp"
+              srcSet="/img/login-page-mobile.webp 1x, /img/login-page-mobile@2x.webp 2x"
+              alt="Login page illustration"
+              className={styles.imgMobileMenu}
+            />
+          </picture>
+        </div>
+        <span className={styles.tagline}>
+          Word · Translation · Grammar · Progress
+        </span>
+        <h1>Login</h1>
+        <p>Please enter your login details to continue using our service:</p>
+        <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
+      </div>
+    </section>
   );
 }
