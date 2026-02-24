@@ -48,12 +48,17 @@ export function ModalWrapper({ onClose, children }: ModalWrapperProps) {
     window.addEventListener("keydown", handleTab);
     window.addEventListener("keydown", handleEscape);
 
+    const scrollBarCompensation =
+      window.innerWidth - document.documentElement.clientWidth;
+
     document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollBarCompensation}px`;
 
     return () => {
       window.removeEventListener("keydown", handleTab);
       window.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
       lastFocusedElement.current?.focus();
     };
   }, [handleClose]);
