@@ -1,4 +1,3 @@
-// src/components/common/WordsTable/WordsTableDesktop.tsx
 import { useMemo } from "react";
 import type { Row } from "@tanstack/react-table";
 import {
@@ -75,7 +74,10 @@ export function WordsTableDesktop({
                 className={styles.buttonAdd}
                 onClick={() => onAddToDictionary?.(word)}
               >
-                Add to dictionary
+                <span className={styles.textBtn}>Add to dictionary</span>
+                <svg className={styles.iconAdd}>
+                  <use href="/icons/sprite.svg#icon-arrow-right" />
+                </svg>
               </button>
             );
           },

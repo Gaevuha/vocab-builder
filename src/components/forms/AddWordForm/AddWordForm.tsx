@@ -70,7 +70,11 @@ export function AddWordForm({
               value={field.value}
               onChange={field.onChange}
               buttonActiveClassName={styles.modalCategoryButtonActive}
-              className={styles.modalCategorySelect}
+              className={`${styles.modalCategorySelect} ${
+                selectedCategory === "verb"
+                  ? styles.modalCategorySelectNoMargin
+                  : ""
+              }`}
               buttonClassName={styles.modalCategoryButton}
               dropdownClassName={styles.modalCategoryDropdown}
               wrapperClassName={styles.modalCategoryWrapper}
@@ -83,7 +87,11 @@ export function AddWordForm({
       </label>
       {/* Verb type */}
       {selectedCategory === "verb" && (
-        <fieldset className={verbTypeClasses.fieldset ?? styles.fieldVerb}>
+        <fieldset
+          className={`${verbTypeClasses.fieldset ?? styles.fieldVerb} ${
+            selectedVerbType === "irregular" ? styles.fieldVerbIrregular : ""
+          }`}
+        >
           <div className={verbTypeClasses.radioGroup ?? styles.radioGroup}>
             <div className={verbTypeClasses.radioItem ?? styles.radioItem}>
               <input

@@ -11,3 +11,15 @@
   margin-bottom: 16px;
   color: var(--color-light-grey);
 }
+@media screen and (min-width: 768px) {
+  .titleForm {
+    font-size: 40px;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  .description {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
+}

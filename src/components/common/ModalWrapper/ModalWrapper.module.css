@@ -41,6 +41,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  top: 16px;
   right: 16px;
   width: 24px;
   height: 24px;
@@ -102,6 +103,7 @@
 
 @media screen and (min-width: 768px) {
   .close {
+    top: 20px;
     right: 20px;
     width: 32px;
     height: 32px;
@@ -109,5 +111,10 @@
   .iconClose {
     width: 32px;
     height: 32px;
+  }
+  .modal {
+    position: relative;
+    width: 628px;
+    padding: 48px 64px;
   }
 }

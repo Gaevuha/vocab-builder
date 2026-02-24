@@ -1,3 +1,5 @@
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Dashboard } from "../../components/dashboard/Dashboard/Dashboard";
 import { WordsTable } from "../../components/common/WordsTable/WordsTable";
@@ -5,7 +7,6 @@ import { WordsPagination } from "../../components/common/WordsPagination/WordsPa
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loadCategories } from "../../store/slices/categoriesSlice";
 import { setPage, setWords } from "../../store/slices/wordsSlice";
-import { showNotification } from "../../store/slices/uiSlice";
 import type { Statistics, Word } from "../../types/words";
 import {
   addForeignWord,
@@ -40,8 +41,10 @@ export function RecommendPage() {
     async (currentPage: number) => {
       const requestId = requestIdRef.current + 1;
       requestIdRef.current = requestId;
+
       try {
         setLoading(true);
+
         const data = await fetchAllWords({
           keyword: searchQuery || undefined,
           category: selectedCategory || undefined,
@@ -53,9 +56,7 @@ export function RecommendPage() {
           limit: wordsState.perPage,
         });
 
-        if (requestId !== requestIdRef.current) {
-          return;
-        }
+        if (requestId !== requestIdRef.current) return;
 
         dispatch(
           setWords({
@@ -65,12 +66,11 @@ export function RecommendPage() {
           })
         );
       } catch (error) {
-        dispatch(
-          showNotification({
-            message: getErrorMessage(error, "Failed to load words"),
-            type: "error",
-          })
-        );
+        iziToast.error({
+          title: "Error",
+          message: getErrorMessage(error, "Failed to load words"),
+          position: "topRight",
+        });
       } finally {
         if (requestId === requestIdRef.current) {
           setLoading(false);
@@ -96,18 +96,18 @@ export function RecommendPage() {
       try {
         const stats = await fetchStatistics();
         setStatistics(stats);
+
         const tasks = await fetchTrainingTasks();
         setTasksCount(tasks.length);
       } catch (error) {
-        dispatch(
-          showNotification({
-            message: getErrorMessage(error, "Failed to load statistics"),
-            type: "error",
-          })
-        );
+        iziToast.error({
+          title: "Error",
+          message: getErrorMessage(error, "Failed to load statistics"),
+          position: "topRight",
+        });
       }
     })();
-  }, [dispatch]);
+  }, []);
 
   const handleSearch = (value: string) => {
     setSearchQuery(value);
@@ -125,19 +125,20 @@ export function RecommendPage() {
   async function handleAddToDictionary(word: Word) {
     try {
       await addForeignWord(word.id);
-      dispatch(
-        showNotification({
-          message: "Word added to dictionary",
-          type: "success",
-        })
-      );
+
+      iziToast.success({
+        title: "Success",
+        message: `"${word.en}" added to dictionary`,
+        position: "topRight",
+        timeout: 2500,
+      });
     } catch (error) {
-      dispatch(
-        showNotification({
-          message: getErrorMessage(error, "Failed to add word"),
-          type: "error",
-        })
-      );
+      iziToast.error({
+        title: "Error",
+        message: getErrorMessage(error, "Failed to add word"),
+        position: "topRight",
+        timeout: 2500,
+      });
     }
   }
 
@@ -152,13 +153,16 @@ export function RecommendPage() {
           totalWords={statistics.totalCount}
           tasksCount={tasksCount}
         />
+
         {loading && wordsState.items.length === 0 && <p>Loading...</p>}
+
         <WordsTable
           words={wordsState.items}
           withActions={false}
           onAddToDictionary={handleAddToDictionary}
           tableMode="recommend"
         />
+
         <WordsPagination
           page={wordsState.page}
           totalPages={wordsState.totalPages}

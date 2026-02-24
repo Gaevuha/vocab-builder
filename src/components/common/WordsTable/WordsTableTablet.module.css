@@ -69,7 +69,7 @@
   background-color: var(--color-light-grey);
   height: 92px;
   border-bottom: 1px solid #dbdbdb;
-  vertical-align: middle;
+   vertical-align: top;
   text-align: left;
 }
 
@@ -84,23 +84,23 @@
 
 /* Кнопка Add to dictionary */
 .buttonAdd {
-  padding: 10px 16px;
-  background-color: #111827;
-  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 120px;
+  height: 41px;
   border: none;
-  border-radius: 10px;
+  background-color: transparent;
+}
+.iconAdd {
+  width: 20px;
+  height: 20px;
+  stroke: var(--color-green);
+}
+
+.textBtn {
   font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  text-align: center;
-  white-space: nowrap;
 }
-
-.buttonAdd:hover {
-  background-color: #0b1220;
-}
-
 .emptyBlock {
   width: 100%;
   text-align: center;

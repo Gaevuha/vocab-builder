@@ -47,7 +47,12 @@ export function CategorySelect({
   }, []);
 
   return (
-    <div ref={wrapperRef} className={`${styles.field} ${className || ""}`}>
+    <div
+      ref={wrapperRef}
+      className={`${styles.field} ${
+        value === "verb" ? styles.filedNoMargin : ""
+      } ${className || ""}`}
+    >
       <button
         ref={buttonRef}
         type="button"
