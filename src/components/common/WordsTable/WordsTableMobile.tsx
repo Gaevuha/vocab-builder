@@ -46,7 +46,9 @@ export function WordsTableMobile({
                       className={styles.buttonAdd}
                       onClick={() => onAddToDictionary?.(word)}
                     >
-                      Add to dictionary
+                      <svg className={styles.iconAdd}>
+                        <use href="/icons/sprite.svg#icon-arrow-right" />
+                      </svg>
                     </button>
                   );
                 }
@@ -82,7 +84,9 @@ export function WordsTableMobile({
                       className={styles.buttonAdd}
                       onClick={() => onAddToDictionary?.(word)}
                     >
-                      Add to dictionary
+                      <svg className={styles.iconAdd}>
+                        <use href="/icons/sprite.svg#icon-arrow-right" />
+                      </svg>
                     </button>
                   );
                 }

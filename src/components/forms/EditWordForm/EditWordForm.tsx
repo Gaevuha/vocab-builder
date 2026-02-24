@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { editWordSchema } from "../../../utils/validation";
 import type { Word } from "../../../types/words";
+import styles from "./EditWordForm.module.css";
 
 export type EditWordFormValues = {
   en: string;
@@ -35,28 +36,57 @@ export function EditWordForm({
   });
 
   return (
-    <form className="word-form" onSubmit={handleSubmit(onSubmit)}>
-      <label className="field">
-        <span>EN</span>
-        <input type="text" placeholder="English" {...register("en")} />
-        {errors.en ? (
-          <span className="field__error">{errors.en.message}</span>
-        ) : null}
-      </label>
+    <form className={styles.editWordForm} onSubmit={handleSubmit(onSubmit)}>
+      <div className={styles.wrapperModalInput}>
+        {/* Ukrainian word */}
+        <div className={styles.field}>
+          <label htmlFor="ua">
+            <svg className={styles.iconUa}>
+              <use xlinkHref="/icons/sprite.svg#icon-ukraine" />
+            </svg>
+            Ukrainian
+          </label>
+          <input
+            id="ua"
+            type="text"
+            className={styles.inputModal}
+            placeholder="Ukrainian"
+            autoComplete="new-password"
+            {...register("ua")}
+          />
+          {errors.ua && (
+            <span className={styles.fieldError}>{errors.ua.message}</span>
+          )}
+        </div>
 
-      <label className="field">
-        <span>UA</span>
-        <input type="text" placeholder="Ukrainian" {...register("ua")} />
-        {errors.ua ? (
-          <span className="field__error">{errors.ua.message}</span>
-        ) : null}
-      </label>
-
-      <div className="form-actions">
-        <button type="submit" disabled={isLoading}>
-          Save
+        {/* English word */}
+        <div className={styles.field}>
+          <label htmlFor="en">
+            {" "}
+            <svg className={styles.iconEn}>
+              <use xlinkHref="/icons/sprite.svg#icon-united-kingdom" />
+            </svg>
+            English
+          </label>
+          <input
+            id="en"
+            type="text"
+            className={styles.inputModal}
+            placeholder="English"
+            autoComplete="new-password"
+            {...register("en")}
+          />
+          {errors.en && (
+            <span className={styles.fieldError}>{errors.en.message}</span>
+          )}
+        </div>
+      </div>
+      {/* Buttons */}
+      <div className={styles.formActions}>
+        <button className={styles.btnAdd} type="submit" disabled={isLoading}>
+          Add
         </button>
-        <button type="button" onClick={onCancel}>
+        <button className={styles.btnCancel} type="button" onClick={onCancel}>
           Cancel
         </button>
       </div>

@@ -1,7 +1,11 @@
 .modalCategorySelect {
   width: 100%;
+  margin-bottom: 58px;
 }
 
+.modalCategorySelectNoMargin {
+  margin-bottom: 0;
+}
 .modalCategoryButton {
   width: 100%;
   background-color: transparent;
@@ -14,9 +18,14 @@
   border-color: var(--color-white);
   box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.3);
 }
-
-.modalCategoryDropdown {
+.modalCategoryWrapper {
   max-height: 240px;
+}
+.modalCategoryDropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 216px;
   overflow-y: auto;
 }
 
@@ -38,9 +47,12 @@
   flex-direction: column;
   border: none;
   gap: 8px;
-  margin-top: 8px;
+  margin: 8px 0 32px 0;
+  padding: 0;
 }
-
+.fieldVerbIrregular {
+  margin-bottom: 12px;
+}
 .radioGroup {
   display: flex;
   gap: 16px;
@@ -75,7 +87,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .radioIcon::after {
@@ -84,7 +96,7 @@
   height: 10px;
   border-radius: 5px;
   background-color: transparent;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
 .radioInput:checked + .radioLabel .radioIcon {
@@ -105,7 +117,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin: 32px 0;
 }
 
 .inputModal {
@@ -162,7 +173,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 32px;
+  margin: 32px 0;
 }
 
 .btnAdd {
@@ -205,4 +216,74 @@
   -moz-text-fill-color: var(--color-light-grey) !important;
   caret-color: var(--color-light-grey) !important;
   background-color: var(--color-green) !important;
+}
+
+@media screen and (min-width: 768px) {
+  .modalCategorySelect {
+    width: 204px;
+    margin-bottom: 70px;
+  }
+  .wrapperModalInput {
+    gap: 18px;
+  }
+  .wrapperModalInput .field {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+  }
+  .inputModal {
+    width: 354px;
+    height: 56px;
+    margin-right: 32px;
+  }
+  .modalCategorySelectNoMargin {
+    margin-bottom: 0;
+  }
+  .fieldVerb {
+    margin-bottom: 38px;
+  }
+
+  .fieldVerbIrregular {
+    margin-bottom: 16px;
+  }
+  .radioLabel {
+    font-size: 16px;
+  }
+
+  .radioIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .helperText {
+    font-size: 12px;
+    line-height: 1.16667;
+  }
+
+  .field label {
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+  .formActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 32px;
+    margin-bottom: 0;
+  }
+
+  .btnAdd,
+  .btnCancel {
+    width: 245px;
+    height: 56px;
+    font-size: 18px;
+    line-height: 1.55556;
+  }
+  .iconUa,
+  .iconEn {
+    width: 32px;
+    height: 32px;
+  }
 }

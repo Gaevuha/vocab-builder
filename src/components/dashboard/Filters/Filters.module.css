@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 8px;
 }
 
 .field {
@@ -77,7 +76,7 @@
 .fieldset {
   border: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 14px 0;
 }
 
 .radioGroup {
@@ -159,6 +158,10 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 28px;
+  }
+
+  .fieldset {
+    margin: 0;
   }
 
   .input {

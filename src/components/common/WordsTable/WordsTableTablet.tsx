@@ -1,4 +1,3 @@
-// src/components/common/WordsTable/WordsTableTablet.tsx
 import { useMemo } from "react";
 import type { Row } from "@tanstack/react-table";
 import {
@@ -21,7 +20,6 @@ export function WordsTableTablet({
   tableMode = "dictionary",
 }: WordsTableProps) {
   const columns = useMemo<ColumnDef<Word>[]>(() => {
-    // Базові колонки для всіх режимів
     const baseColumns: ColumnDef<Word>[] = [
       {
         header: () => (
@@ -59,7 +57,6 @@ export function WordsTableTablet({
       },
     ];
 
-    // Додаємо колонки в залежності від режиму
     if (tableMode === "recommend") {
       return [
         ...baseColumns,
@@ -75,7 +72,10 @@ export function WordsTableTablet({
                 className={styles.buttonAdd}
                 onClick={() => onAddToDictionary?.(word)}
               >
-                Add to dictionary
+                <span className={styles.textBtn}>Add to dictionary</span>
+                <svg className={styles.iconAdd}>
+                  <use href="/icons/sprite.svg#icon-arrow-right" />
+                </svg>
               </button>
             );
           },

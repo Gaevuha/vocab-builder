@@ -2,7 +2,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.filedNoMargin {
+  margin-bottom: 0;
 }
 
 .customSelect {
@@ -71,10 +75,15 @@
   }
 }
 
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.3s ease-out;
+}
 .option {
-  padding: 8px 0;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
 }
 
 .option:hover {
@@ -88,6 +97,9 @@
 @media screen and (min-width: 768px) {
   .customSelect {
     width: 164px;
+  }
+  .field {
+    margin-bottom: 0;
   }
 }
 
