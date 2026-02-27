@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { showNotification } from "../../store/slices/uiSlice";
 import { fetchTrainingTasks, submitTraining } from "../../services/training";
 import { setTasks, setProgress } from "../../store/slices/trainingSlice";
-import iziToast from "izitoast";
+
 import type {
   TrainingRoomProps,
   TrainingAnswer,
@@ -73,7 +73,6 @@ export function TrainingPage() {
       );
 
       if (!task) {
-        // fallback
         const trimmedAnswer = answer.answer.trim();
         return {
           _id: answer.taskId,
@@ -111,18 +110,65 @@ export function TrainingPage() {
   };
 
   // Часткове збереження
+  // 🔹 Часткове збереження (тільки правильні відповіді)
   const handlePartialSubmit: NonNullable<
     TrainingRoomProps["onPartialSubmit"]
   > = async (answers) => {
     if (!answers.length) return;
 
-    const payload = buildPayload(answers);
+    // Перевірка останньої відповіді
+    const lastAnswer = answers[answers.length - 1];
+    const task = tasks.find((t) => t.id === lastAnswer.taskId);
+    const dictionaryWord = dictionaryWords.find(
+      (w) => w.id === lastAnswer.taskId
+    );
+
+    if (!task) return;
+
+    const rawAnswer = lastAnswer.answer.trim();
+    const expectedEn = dictionaryWord?.en ?? task.en ?? "";
+    const expectedUa = dictionaryWord?.ua ?? task.ua ?? "";
+
+    const normalizedAnswer = normalize(rawAnswer);
+    const isCorrect =
+      normalize(expectedEn) === normalizedAnswer ||
+      normalize(expectedUa) === normalizedAnswer;
+
+    if (!isCorrect) {
+      // ❌ Нотифікація про неправильну відповідь
+      dispatch(
+        showNotification({
+          message: "Incorrect answer, progress not saved",
+          type: "error",
+        })
+      );
+      return;
+    }
+
+    // ✅ Відповідь правильна — сабмітимо
+    const payload = buildPayload([lastAnswer]); // передаємо тільки останню правильну відповідь
 
     partialSubmitQueueRef.current = partialSubmitQueueRef.current.then(() =>
       submitTraining(payload)
     );
 
-    await partialSubmitQueueRef.current;
+    try {
+      await partialSubmitQueueRef.current;
+
+      dispatch(
+        showNotification({
+          message: "Progress saved successfully",
+          type: "success",
+        })
+      );
+    } catch {
+      dispatch(
+        showNotification({
+          message: "Current progress was not saved",
+          type: "error",
+        })
+      );
+    }
   };
 
   // Фінальне збереження + score
@@ -142,12 +188,10 @@ export function TrainingPage() {
     } catch (error) {
       partialSubmitQueueRef.current = Promise.resolve();
 
-      iziToast.error({
-        title: "Помилка",
-        message:
-          error instanceof Error ? error.message : "Training save failed",
-        position: "topRight",
-      });
+      const message =
+        error instanceof Error ? error.message : "Training save failed";
+
+      dispatch(showNotification({ message, type: "error" }));
 
       navigate(routes.dictionary, { replace: true });
     }
