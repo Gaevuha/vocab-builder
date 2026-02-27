@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { clearNotification } from "../../../store/slices/uiSlice";
+import styles from "./Notification.module.css";
 
 export function Notification() {
   const notification = useAppSelector((state) => state.ui.notification);
@@ -13,7 +14,7 @@ export function Notification() {
 
     const timeoutId = window.setTimeout(() => {
       dispatch(clearNotification());
-    }, 4000);
+    }, 3000);
 
     return () => window.clearTimeout(timeoutId);
   }, [dispatch, notification]);
@@ -24,13 +25,12 @@ export function Notification() {
 
   return (
     <div
-      className={`notification notification--${notification.type}`}
+      className={`${styles.notification} ${
+        styles[`notification--${notification.type}`]
+      }`}
       role="status"
     >
       <span>{notification.message}</span>
-      <button type="button" onClick={() => dispatch(clearNotification())}>
-        ✕
-      </button>
     </div>
   );
 }

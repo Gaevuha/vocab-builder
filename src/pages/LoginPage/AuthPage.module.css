@@ -1,15 +1,23 @@
-.sectionLoginPage {
+.sectionLoginPage,
+.sectionRegisterPage {
   padding-top: 16px;
 }
 .wrapperLogoImgTag {
   margin-bottom: 43px;
 }
+.wrapperLogoImgTag.wrapperLogoImgTagRegister {
+  margin-bottom: 0;
+}
+
 .wrapperImgMobile {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 12px;
   margin-bottom: 16px;
+}
+.wrapperImgMobile.wrapperImgMobileRegister {
+  margin-bottom: 0;
 }
 .imgMobileMenu {
   max-width: 100%;
@@ -41,18 +49,25 @@
   color: var(--color-tagline);
 }
 
+.textLoginPage.textLoginPageRegister {
+  margin-bottom: 16px;
+}
+
 @media screen and (min-width: 768px) {
-  .sectionLoginPage {
+  .sectionLoginPage,
+  .sectionRegisterPage {
     position: relative;
     min-height: 100vh;
-    padding-top: 16px;
+    padding-top: 24px;
     padding-bottom: 106px;
   }
 
   .wrapperLogoImgTag {
     margin-bottom: 140px;
   }
-
+  .wrapperLogoImgTag.wrapperLogoImgTagRegister {
+    margin-bottom: 140px;
+  }
   .wrapperFormBtn {
     width: 628px;
     padding: 48px 64px;
@@ -69,7 +84,12 @@
     margin-bottom: 32px;
     font-size: 20px;
   }
+  .textLoginPage.textLoginPageRegister {
+    margin-bottom: 32px;
+  }
+
   .taglineTable {
+    font-size: 16px;
     display: block;
     text-align: center;
   }
@@ -92,6 +112,9 @@
     padding-top: 24px;
     padding-bottom: 104px;
   }
+  .sectionRegisterPage {
+    padding-bottom: 80px;
+  }
   .wrapperContent {
     display: flex;
     flex-direction: row-reverse;
@@ -105,5 +128,12 @@
   }
   .wrapperImgMobile {
     margin-top: 0;
+  }
+  .wrapperImgMobile.wrapperImgMobileRegister {
+    margin-bottom: 16px;
+  }
+
+  .tagline {
+    font-size: 16px;
   }
 }

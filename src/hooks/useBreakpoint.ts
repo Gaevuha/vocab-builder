@@ -39,7 +39,7 @@ export function useBreakpoint() {
       mobileMedia.removeEventListener("change", update);
     };
   }, []);
-
+  console.log({ isMobile, isTablet, isDesktop });
   return {
     isDesktop,
     isTablet,
