@@ -40,7 +40,13 @@
   --color-modal: #d1d5db;
   --color-icon-user: rgba(252, 252, 252, 0.7);
   --color-text-statistics: rgba(18, 20, 23, 0.5);
+  --color-tagline: rgba(18, 20, 23, 0.8);
+  --color-input-normal: rgba(18, 20, 23, 0.1);
+  --color-input-error: #d80027;
+  --color-input-hover: #85aa9f;
+  --color-input-correct: #3cbf61;
   --bg-header-table: rgba(133, 170, 159, 0.1);
+
 }
 /* Basse */
 

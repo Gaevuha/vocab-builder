@@ -1,6 +1,8 @@
 import * as yup from "yup";
 import { emailRegex, passwordRegex, enWordRegex, uaWordRegex } from "./regex";
 
+export const PASSWORD_SUCCESS_MESSAGE = "Success password";
+
 export const registerSchema = yup.object({
   name: yup.string().required("Name is required"),
   email: yup
@@ -10,10 +12,7 @@ export const registerSchema = yup.object({
   password: yup
     .string()
     .required("Password is required")
-    .matches(
-      passwordRegex,
-      "Password must be 7 chars, include 6 letters and 1 digit"
-    ),
+    .matches(passwordRegex, "Error password"),
 });
 
 export const loginSchema = yup.object({
@@ -24,10 +23,7 @@ export const loginSchema = yup.object({
   password: yup
     .string()
     .required("Password is required")
-    .matches(
-      passwordRegex,
-      "Password must be 7 chars, include 6 letters and 1 digit"
-    ),
+    .matches(passwordRegex, "Error password"),
 });
 
 export const addWordSchema = yup.object({

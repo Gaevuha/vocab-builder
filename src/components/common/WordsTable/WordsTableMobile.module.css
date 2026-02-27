@@ -70,10 +70,6 @@
   stroke: var(--color-green);
 }
 
-.buttonAdd:hover {
-  background-color: #0b1220;
-}
-
 .emptyBlock {
   width: 100%;
   text-align: center;

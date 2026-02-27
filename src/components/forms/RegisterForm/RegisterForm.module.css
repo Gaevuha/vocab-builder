@@ -1,0 +1,136 @@
+.formRegister {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.fieldLogin,
+.fieldName {
+  margin-bottom: 14px;
+}
+.inputLogin,
+.inputName {
+  background-color: transparent;
+  border: 1px solid var(--color-input-normal);
+  border-radius: 15px;
+  padding: 16px 18px;
+  width: 343px;
+  height: 56px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  color: var(--color-dark);
+}
+
+/* Hover & focus */
+.inputLogin:hover,
+.inputLogin:focus .inputName:hover,
+.inputName:focus {
+  border-color: var(--color-input-hover);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(133, 170, 159, 0.2);
+}
+
+/* Error state */
+.inputLogin.error,
+.inputName.error {
+  border-color: var(--color-input-error);
+  box-shadow: 0 0 0 2px rgba(216, 0, 39, 0.2);
+}
+
+/* Correct / valid state */
+.inputLogin.correct,
+.inputName.correct {
+  border-color: var(--color-input-correct);
+  box-shadow: 0 0 0 2px rgba(60, 191, 97, 0.2);
+}
+
+/* Chrome, Edge, Safari autofill */
+.inputLogin:-webkit-autofill,
+.inputLogin:-webkit-autofill:hover,
+.inputLogin:-webkit-autofill:focus,
+.inputLogin:-webkit-autofill:active,
+.inputName:-webkit-autofill,
+.inputName:-webkit-autofill:hover,
+.inputName:-webkit-autofill:focus,
+.inputName:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-header-table) inset !important;
+  -webkit-text-fill-color: var(--color-dark) !important;
+  caret-color: var(--color-dark) !important;
+  border: 1px solid var(--color-input-normal) !important;
+  background-color: transparent !important;
+}
+
+/* Firefox autofill */
+.inputLogin:-moz-autofill,
+.inputLogin:-moz-autofill:hover,
+.inputLogin:-moz-autofill:focus,
+.inputLogin:-moz-autofill:active,
+.inputName:-moz-autofill,
+.inputName:-moz-autofill:hover,
+.inputName:-moz-autofill:focus,
+.inputName:-moz-autofill:active {
+  box-shadow: 0 0 0 1000px var(--bg-header-table) inset !important;
+  -moz-text-fill-color: var(--color-dark) !important;
+  caret-color: var(--color-dark) !important;
+  background-color: transparent !important;
+}
+
+.fieldName .fieldError {
+  position: absolute;
+  top: 54px;
+  left: 0;
+  display: block;
+  color: var(--color-input-error);
+  font-size: 12px;
+}
+
+.fieldLogin .fieldError {
+  position: absolute;
+  top: 123px;
+  left: 0;
+  display: block;
+  color: var(--color-input-error);
+  font-size: 12px;
+}
+.formBtn {
+  border-radius: 30px;
+  padding-block: 16px;
+  padding-inline: 150px;
+  font-weight: 700;
+  color: var(--color-light-grey);
+  background-color: var(--color-green);
+  width: 343px;
+  height: 56px;
+  margin-bottom: 16px;
+  border: none;
+}
+.formLink {
+  display: block;
+
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  color: var(--color-text-statistics);
+}
+
+@media screen and (min-width: 768px) {
+  .inputLogin,
+  .inputName {
+    width: 500px;
+  }
+  .fieldLogin,
+  .fieldName {
+    margin-bottom: 18px;
+  }
+}

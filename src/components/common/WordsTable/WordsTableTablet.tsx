@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import type { Row } from "@tanstack/react-table";
 import {
   useReactTable,
@@ -9,6 +9,8 @@ import {
 import type { Word, WordsTableProps } from "../../../types/words";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { RowActions } from "./WordsTableActions";
+import { useAppDispatch } from "../../../store/hooks";
+import { showNotification } from "../../../store/slices/uiSlice";
 import styles from "./WordsTableTablet.module.css";
 
 export function WordsTableTablet({
@@ -19,6 +21,20 @@ export function WordsTableTablet({
   onAddToDictionary,
   tableMode = "dictionary",
 }: WordsTableProps) {
+  const dispatch = useAppDispatch();
+
+  // Показ Notification, якщо масив порожній
+  useEffect(() => {
+    if (words.length === 0) {
+      dispatch(
+        showNotification({
+          type: "info",
+          message: "No words found!",
+        })
+      );
+    }
+  }, [words, dispatch]);
+
   const columns = useMemo<ColumnDef<Word>[]>(() => {
     const baseColumns: ColumnDef<Word>[] = [
       {
@@ -127,72 +143,70 @@ export function WordsTableTablet({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
+  if (words.length === 0) {
+    return <></>;
+  }
   return (
     <div className={styles.tableWrapper}>
-      {words.length === 0 ? (
-        <div className={styles.emptyBlock}>No words found!</div>
-      ) : (
-        <table className={styles.table}>
-          <colgroup>
-            {tableMode === "recommend" ? (
-              <>
-                <col style={{ width: "180px" }} />
-                <col style={{ width: "180px" }} />
-                <col style={{ width: "160px" }} />
-                <col style={{ width: "148px" }} />
-              </>
-            ) : (
-              <>
-                <col style={{ width: "160px" }} />
-                <col style={{ width: "169px" }} />
-                <col style={{ width: "151px" }} />
-                <col style={{ width: "122px" }} />
-                <col style={{ width: "66px" }} />
-              </>
-            )}
-          </colgroup>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header, idx) => (
-                  <th
-                    key={header.id}
-                    className={`${styles.th} ${
-                      idx !== headerGroup.headers.length - 1
-                        ? styles.thWithBorder
-                        : ""
-                    }`}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell, idx) => (
-                  <td
-                    key={cell.id}
-                    className={`${styles.td} ${
-                      idx !== row.getVisibleCells().length - 1
-                        ? styles.tdWithBorder
-                        : ""
-                    }`}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <table className={styles.table}>
+        <colgroup>
+          {tableMode === "recommend" ? (
+            <>
+              <col style={{ width: "180px" }} />
+              <col style={{ width: "180px" }} />
+              <col style={{ width: "160px" }} />
+              <col style={{ width: "148px" }} />
+            </>
+          ) : (
+            <>
+              <col style={{ width: "160px" }} />
+              <col style={{ width: "169px" }} />
+              <col style={{ width: "151px" }} />
+              <col style={{ width: "122px" }} />
+              <col style={{ width: "66px" }} />
+            </>
+          )}
+        </colgroup>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, idx) => (
+                <th
+                  key={header.id}
+                  className={`${styles.th} ${
+                    idx !== headerGroup.headers.length - 1
+                      ? styles.thWithBorder
+                      : ""
+                  }`}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell, idx) => (
+                <td
+                  key={cell.id}
+                  className={`${styles.td} ${
+                    idx !== row.getVisibleCells().length - 1
+                      ? styles.tdWithBorder
+                      : ""
+                  }`}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

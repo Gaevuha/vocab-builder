@@ -22,3 +22,11 @@
     height: 40px;
   }
 }
+@media screen and (min-width: 1440px) {
+  .logoLink {
+    margin-bottom: 114px;
+  }
+  .logoLink.logoLinkRegister {
+    margin-bottom: 64px;
+  }
+}

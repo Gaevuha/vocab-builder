@@ -7,7 +7,7 @@ import type {
 } from "../types/training";
 import { useAppDispatch } from "../store/hooks";
 import { setProgress } from "../store/slices/trainingSlice";
-import iziToast from "izitoast";
+import { showNotification } from "../store/slices/uiSlice";
 
 type AnswerFormValues = {
   answer: string;
@@ -33,6 +33,7 @@ export function useTrainingRoomState(
     formState: { errors },
   } = useForm<AnswerFormValues>({ mode: "onSubmit" });
 
+  // progress sync
   useEffect(() => {
     dispatch(setProgress(answers.length));
   }, [answers.length, dispatch]);
@@ -57,17 +58,17 @@ export function useTrainingRoomState(
       answer: value,
     };
 
-    // 🔹 оновлений масив для submit
     const updated = upsertAnswer(answers, newAnswer);
     setAnswers(updated);
 
     if (onPartialSubmit) {
       Promise.resolve(onPartialSubmit(updated)).catch(() => {
-        iziToast.error({
-          title: "Error",
-          message: "Current progress was not saved",
-          position: "topCenter",
-        });
+        dispatch(
+          showNotification({
+            type: "error",
+            message: "Current progress was not saved",
+          })
+        );
       });
     }
 
@@ -92,7 +93,24 @@ export function useTrainingRoomState(
       setAnswers(updated);
     }
 
-    await Promise.resolve(onSubmit(updated));
+    try {
+      await Promise.resolve(onSubmit(updated));
+
+      dispatch(
+        showNotification({
+          type: "success",
+          message: "Training completed successfully",
+        })
+      );
+    } catch (error) {
+      dispatch(
+        showNotification({
+          type: "error",
+          message:
+            error instanceof Error ? error.message : "Failed to save training",
+        })
+      );
+    }
   };
 
   return {

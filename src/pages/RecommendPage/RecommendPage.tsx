@@ -1,5 +1,3 @@
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Dashboard } from "../../components/dashboard/Dashboard/Dashboard";
 import { WordsTable } from "../../components/common/WordsTable/WordsTable";
@@ -13,6 +11,7 @@ import {
   fetchAllWords,
   fetchStatistics,
 } from "../../services/words";
+import { showNotification } from "../../store/slices/uiSlice";
 import { fetchTrainingTasks } from "../../services/training";
 import styles from "./RecommendPage.module.css";
 
@@ -66,11 +65,12 @@ export function RecommendPage() {
           })
         );
       } catch (error) {
-        iziToast.error({
-          title: "Error",
-          message: getErrorMessage(error, "Failed to load words"),
-          position: "topRight",
-        });
+        dispatch(
+          showNotification({
+            type: "error",
+            message: getErrorMessage(error, "Failed to load words"),
+          })
+        );
       } finally {
         if (requestId === requestIdRef.current) {
           setLoading(false);
@@ -100,14 +100,15 @@ export function RecommendPage() {
         const tasks = await fetchTrainingTasks();
         setTasksCount(tasks.length);
       } catch (error) {
-        iziToast.error({
-          title: "Error",
-          message: getErrorMessage(error, "Failed to load statistics"),
-          position: "topRight",
-        });
+        dispatch(
+          showNotification({
+            type: "error",
+            message: getErrorMessage(error, "Failed to load statistics"),
+          })
+        );
       }
     })();
-  }, []);
+  }, [dispatch]);
 
   const handleSearch = (value: string) => {
     setSearchQuery(value);
@@ -126,19 +127,19 @@ export function RecommendPage() {
     try {
       await addForeignWord(word.id);
 
-      iziToast.success({
-        title: "Success",
-        message: `"${word.en}" added to dictionary`,
-        position: "topRight",
-        timeout: 2500,
-      });
+      dispatch(
+        showNotification({
+          type: "success",
+          message: `"${word.en}" added to dictionary`,
+        })
+      );
     } catch (error) {
-      iziToast.error({
-        title: "Error",
-        message: getErrorMessage(error, "Failed to add word"),
-        position: "topRight",
-        timeout: 2500,
-      });
+      dispatch(
+        showNotification({
+          type: "error",
+          message: getErrorMessage(error, "Failed to add word"),
+        })
+      );
     }
   }
 

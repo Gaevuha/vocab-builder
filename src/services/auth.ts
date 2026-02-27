@@ -1,4 +1,3 @@
-// src/services/auth.ts
 import { api, ApiError, setToken } from "./api";
 import { clearToken } from "../utils/storage";
 import type {
