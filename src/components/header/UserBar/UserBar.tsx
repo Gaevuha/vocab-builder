@@ -1,7 +1,4 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { clearCredentials, setUser } from "../../../store/slices/authSlice";
-import { getCurrentUser } from "../../../services/auth";
+import { useAppSelector } from "../../../store/hooks";
 import { LogoutButton } from "../../common/LogoutButton/LogoutButton";
 
 import styles from "./UserBar.module.css";
@@ -12,17 +9,8 @@ type UserNameProps = {
 
 export function UserName({ variant = "default" }: UserNameProps) {
   const user = useAppSelector((state) => state.auth.user);
-  const dispatch = useAppDispatch();
 
   const displayName = user?.name?.trim().split(/\s+/)[0] ?? "User";
-
-  useEffect(() => {
-    if (!user) {
-      getCurrentUser()
-        .then((currentUser) => dispatch(setUser(currentUser)))
-        .catch(() => dispatch(clearCredentials()));
-    }
-  }, [dispatch, user]);
 
   return (
     <span
