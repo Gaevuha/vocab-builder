@@ -31,7 +31,7 @@
 }
 
 /* Hover & focus */
-.inputLogin:hover,
+
 .inputLogin:focus {
   border-color: var(--color-input-hover);
   outline: none;
@@ -133,5 +133,10 @@
   }
   .formLink:hover {
     color: var(--color-dark);
+  }
+  .inputLogin:hover {
+    border-color: var(--color-input-hover);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(133, 170, 159, 0.2);   
   }
 }
