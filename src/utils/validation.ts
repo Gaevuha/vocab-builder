@@ -2,6 +2,8 @@ import * as yup from "yup";
 import { emailRegex, passwordRegex, enWordRegex, uaWordRegex } from "./regex";
 
 export const PASSWORD_SUCCESS_MESSAGE = "Success password";
+export const PASSWORD_ERROR_MESSAGE =
+  "Password must contain exactly 6 Latin letters and 1 digit (7 characters total)";
 
 export const registerSchema = yup.object({
   name: yup.string().required("Name is required"),
@@ -12,7 +14,7 @@ export const registerSchema = yup.object({
   password: yup
     .string()
     .required("Password is required")
-    .matches(passwordRegex, "Error password"),
+    .matches(passwordRegex, PASSWORD_ERROR_MESSAGE),
 });
 
 export const loginSchema = yup.object({
@@ -23,7 +25,7 @@ export const loginSchema = yup.object({
   password: yup
     .string()
     .required("Password is required")
-    .matches(passwordRegex, "Error password"),
+    .matches(passwordRegex, PASSWORD_ERROR_MESSAGE),
 });
 
 export const addWordSchema = yup.object({
