@@ -7,7 +7,6 @@ import type {
 } from "../types/training";
 import { useAppDispatch } from "../store/hooks";
 import { setProgress } from "../store/slices/trainingSlice";
-import { showNotification } from "../store/slices/uiSlice";
 
 type AnswerFormValues = {
   answer: string;
@@ -15,15 +14,14 @@ type AnswerFormValues = {
 
 export function useTrainingRoomState(
   tasks: TrainingTask[],
-  onSubmit: TrainingRoomProps["onSubmit"],
-  onPartialSubmit?: TrainingRoomProps["onPartialSubmit"]
+  onSubmit: TrainingRoomProps["onSubmit"]
 ) {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<TrainingAnswer[]>([]);
   const dispatch = useAppDispatch();
 
   const task = tasks[index];
-  const isLast = index >= tasks.length - 1;
+  const isLast = tasks.length > 0 && index === tasks.length - 1;
 
   const {
     register,
@@ -50,30 +48,19 @@ export function useTrainingRoomState(
     if (!task) return;
 
     const value = getValues("answer")?.trim();
-    if (!value) return;
+    if (value) {
+      const newAnswer: TrainingAnswer = {
+        taskId: task.id,
+        taskIndex: index,
+        answer: value,
+      };
 
-    const newAnswer: TrainingAnswer = {
-      taskId: task.id,
-      taskIndex: index,
-      answer: value,
-    };
-
-    const updated = upsertAnswer(answers, newAnswer);
-    setAnswers(updated);
-
-    if (onPartialSubmit) {
-      Promise.resolve(onPartialSubmit(updated)).catch(() => {
-        dispatch(
-          showNotification({
-            type: "error",
-            message: "Current progress was not saved",
-          })
-        );
-      });
+      const updated = upsertAnswer(answers, newAnswer);
+      setAnswers(updated);
     }
 
     reset();
-    setIndex((prev) => prev + 1);
+    setIndex((prev) => Math.min(prev + 1, tasks.length - 1));
   };
 
   const handleSave: SubmitHandler<AnswerFormValues> = async (data) => {
@@ -93,24 +80,7 @@ export function useTrainingRoomState(
       setAnswers(updated);
     }
 
-    try {
-      await Promise.resolve(onSubmit(updated));
-
-      dispatch(
-        showNotification({
-          type: "success",
-          message: "Training completed successfully",
-        })
-      );
-    } catch (error) {
-      dispatch(
-        showNotification({
-          type: "error",
-          message:
-            error instanceof Error ? error.message : "Failed to save training",
-        })
-      );
-    }
+    await Promise.resolve(onSubmit(updated));
   };
 
   return {

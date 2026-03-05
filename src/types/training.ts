@@ -21,5 +21,4 @@ export type TrainingSubmitItem = {
 export type TrainingRoomProps = {
   tasks: TrainingTask[];
   onSubmit: (answers: TrainingAnswer[]) => void | Promise<void>;
-  onPartialSubmit?: (answers: TrainingAnswer[]) => void | Promise<void>;
 };

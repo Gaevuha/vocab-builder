@@ -104,16 +104,24 @@
   font-size: 12px;
 }
 .formBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 30px;
   padding-block: 16px;
-  padding-inline: 150px;
-  font-weight: 700;
-  color: var(--color-light-grey);
-  background-color: var(--color-green);
   width: 343px;
   height: 56px;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-light-grey);
+  background-color: var(--color-green);
   margin-bottom: 16px;
   border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.formBtn:focus-visible {
+  background-color: var(--color-hover-btn);
+  outline: none;
 }
 .formLink {
   display: block;
@@ -122,6 +130,11 @@
   text-decoration: underline;
   text-decoration-skip-ink: none;
   color: var(--color-text-statistics);
+  transition: color 0.3s ease;
+}
+.formLink:focus-visible {
+  color: var(--color-dark);
+  outline: none;
 }
 
 @media screen and (min-width: 768px) {
@@ -132,5 +145,19 @@
   .fieldLogin,
   .fieldName {
     margin-bottom: 18px;
+  }
+  .formBtn {
+    height: 60px;
+    font-size: 18px;
+    line-height: 1.55556;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .formBtn:hover {
+    background-color: var(--color-hover-btn);
+  }
+  .formLink:hover {
+    color: var(--color-dark);
   }
 }

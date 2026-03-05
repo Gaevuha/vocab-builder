@@ -1,18 +1,26 @@
 .progressBar {
+  --progress-size: 44px;
+  --progress-color: var(--color-green);
+  --progress-trail: rgba(133, 170, 159, 0.2);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: var(--progress-size);
+  height: var(--progress-size);
 }
 
 .progressBar :global(.CircularProgressbar-path) {
-  stroke: #2bd627;
+  stroke: var(--progress-color);
   stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
 }
 
 .progressBar :global(.CircularProgressbar-trail) {
-  stroke: #d4f8d3;
+  stroke: var(--progress-trail);
 }
 
 .progressBar :global(.CircularProgressbar-text) {
-  fill: #64748b;
+  fill: var(--color-dark);
+  font-size: 28px;
+  font-weight: 500;
 }

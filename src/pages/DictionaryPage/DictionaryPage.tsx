@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
@@ -55,11 +55,8 @@ export function DictionaryPage() {
   const [tasksCount, setTasksCount] = useState(0);
 
   const [loading, setLoading] = useState(true);
-  const hasLoadedRef = useRef(false);
   const requestIdRef = useRef(0);
   const emptyNotificationShownRef = useRef(false);
-
-  // ---------------- INIT ----------------
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -76,13 +73,23 @@ export function DictionaryPage() {
     }
   }, [searchParams, setSearchParams]);
 
+  // get error message helper
+  const getErrorMessage = (error: unknown, fallback: string) =>
+    error instanceof Error ? error.message : fallback;
+
+  const refreshTasksCount = useCallback(async () => {
+    const tasks = await fetchTrainingTasks();
+    setTasksCount(tasks.length);
+  }, []);
+
   // ---------------- LOAD WORDS ----------------
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
+  const loadWords = useCallback(
+    async (currentPage: number) => {
+      if (!isAuthenticated) return;
 
-    const loadWords = async () => {
-      const requestId = ++requestIdRef.current;
+      const requestId = requestIdRef.current + 1;
+      requestIdRef.current = requestId;
 
       try {
         setLoading(true);
@@ -94,12 +101,34 @@ export function DictionaryPage() {
             selectedCategory === "verb"
               ? selectedVerbType === "irregular"
               : undefined,
-          page,
+          page: currentPage,
           limit: perPage,
         });
 
         // cancel outdated response
         if (requestId !== requestIdRef.current) return;
+
+        const hasActiveFilters = Boolean(
+          searchQuery.trim() || selectedCategory || selectedVerbType
+        );
+
+        if (
+          data.items.length === 0 &&
+          hasActiveFilters &&
+          !emptyNotificationShownRef.current
+        ) {
+          dispatch(
+            showNotification({
+              message: "No words yet",
+              type: "info",
+            })
+          );
+          emptyNotificationShownRef.current = true;
+        }
+
+        if (data.items.length > 0 || !hasActiveFilters) {
+          emptyNotificationShownRef.current = false;
+        }
 
         dispatch(
           setWords({
@@ -108,15 +137,10 @@ export function DictionaryPage() {
             perPage: data.perPage,
           })
         );
-
-        hasLoadedRef.current = true;
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Failed to load words";
-
         dispatch(
           showNotification({
-            message,
+            message: getErrorMessage(error, "Failed to load words"),
             type: "error",
           })
         );
@@ -125,18 +149,21 @@ export function DictionaryPage() {
           setLoading(false);
         }
       }
-    };
+    },
+    [
+      isAuthenticated,
+      dispatch,
+      searchQuery,
+      selectedCategory,
+      selectedVerbType,
+      perPage,
+    ]
+  );
 
-    loadWords();
-  }, [
-    isAuthenticated,
-    dispatch,
-    page,
-    perPage,
-    searchQuery,
-    selectedCategory,
-    selectedVerbType,
-  ]);
+  useEffect(() => {
+    dispatch(setPage(1));
+    loadWords(1);
+  }, [dispatch, loadWords]);
 
   // ---------------- STATS ----------------
 
@@ -145,13 +172,10 @@ export function DictionaryPage() {
 
     const loadStats = async () => {
       try {
-        const [stats, tasks] = await Promise.all([
-          fetchStatistics(),
-          fetchTrainingTasks(),
-        ]);
+        const stats = await fetchStatistics();
 
         setStatistics(stats);
-        setTasksCount(tasks.length);
+        await refreshTasksCount();
       } catch {
         dispatch(
           showNotification({
@@ -163,17 +187,28 @@ export function DictionaryPage() {
     };
 
     loadStats();
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, refreshTasksCount]);
 
   // ---------------- ACTIONS ----------------
 
-  const handlePageChange = (newPage: number) => {
-    dispatch(setPage(newPage));
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setSelectedVerbType("");
+  };
+
+  const handleVerbTypeChange = (value: string) => {
+    setSelectedVerbType(value);
   };
 
   const handleAddWord = async (values: CreateWordPayload) => {
     await addWord(values);
     dispatch(setPage(1));
+    await loadWords(1);
+    await refreshTasksCount();
   };
 
   const handleEditWord = async (values: EditWordFormValues) => {
@@ -187,6 +222,8 @@ export function DictionaryPage() {
     });
 
     setEditWord(null);
+    await loadWords(page);
+    await refreshTasksCount();
   };
 
   const handleDeleteWord = async (word: Word) => {
@@ -198,65 +235,41 @@ export function DictionaryPage() {
         type: "success",
       })
     );
+
+    await loadWords(page);
+    await refreshTasksCount();
   };
 
   // ---------------- UI ----------------
-
-  const showEmpty = !loading && hasLoadedRef.current && words.length === 0;
-  const hasActiveFilters = useMemo(
-    () => Boolean(searchQuery.trim() || selectedCategory || selectedVerbType),
-    [searchQuery, selectedCategory, selectedVerbType]
-  );
-
-  useEffect(() => {
-    if (showEmpty && hasActiveFilters && !emptyNotificationShownRef.current) {
-      dispatch(
-        showNotification({
-          message: "No words yet",
-          type: "info",
-        })
-      );
-      emptyNotificationShownRef.current = true;
-      return;
-    }
-
-    if (!showEmpty) {
-      emptyNotificationShownRef.current = false;
-    }
-  }, [dispatch, hasActiveFilters, showEmpty]);
 
   return (
     <section className={styles.dictionaryPage}>
       <div className="container">
         <Dashboard
-          onSearch={setSearchQuery}
-          onCategoryChange={(value) => {
-            setSelectedCategory(value);
-            dispatch(setPage(1));
-          }}
-          onVerbTypeChange={setSelectedVerbType}
+          onSearch={handleSearch}
+          onCategoryChange={handleCategoryChange}
+          onVerbTypeChange={handleVerbTypeChange}
           onAddWord={() => setShowAddModal(true)}
           totalWords={statistics.totalCount}
           tasksCount={tasksCount}
         />
 
-        {loading && <p>Loading...</p>}
+        {loading && words.length === 0 && <p>Loading...</p>}
 
-        {!loading && words.length > 0 && (
-          <>
-            <WordsTable
-              words={words}
-              onEdit={setEditWord}
-              onDelete={handleDeleteWord}
-            />
+        <WordsTable
+          words={words}
+          onEdit={setEditWord}
+          onDelete={handleDeleteWord}
+        />
 
-            <WordsPagination
-              page={page}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
+        <WordsPagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={(nextPage) => {
+            dispatch(setPage(nextPage));
+            loadWords(nextPage);
+          }}
+        />
 
         <AddWordModal
           isOpen={showAddModal}

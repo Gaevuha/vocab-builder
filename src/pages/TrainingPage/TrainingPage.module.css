@@ -1,9 +1,212 @@
 .trainingPage {
-  padding: 24px 0 48px;
+  padding: 75px 0;
 }
 
+.trainingPage.trainingPageNoEmpty {
+  padding-top: 24px;
+}
+.containerNoEmpty {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 .trainingProgress {
   display: flex;
   justify-content: flex-end;
-  margin: 12px 0 16px;
+  margin-bottom: 8px;
+}
+
+.trainingProgressBar {
+  --progress-size: 44px;
+  --progress-color: #85aa9f;
+  --progress-trail: #ffffff;
+}
+
+.loadingState {
+  min-height: calc(100dvh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-statistics);
+}
+.wrapperImgTraining {
+  width: 144px;
+  height: 166px;
+  margin: 0 auto 32px;
+}
+
+.imgTraining {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.emptyState {
+  min-height: calc(100dvh - 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.emptyImage {
+  margin: 0 auto 4px;
+}
+
+.emptyTitle {
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.emptyText {
+  font-size: 14px;
+  margin-bottom: 132px;
+}
+
+.emptyActions {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryButton {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 30px;
+  background-color: var(--color-green);
+  color: var(--color-light-grey);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.5;
+  transition: background-color 0.3s ease;
+}
+
+.primaryButton:focus-visible {
+  background: var(--color-hover-btn);
+}
+
+.secondaryButton {
+  border: none;
+  background-color: transparent;
+  color: var(--color-text-statistics);
+  font-weight: 700;
+  font-size: 16px;
+  transition: color 0.3s ease, background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+.secondaryButton:focus-visible {
+  background: var(--color-hover-btn);
+}
+
+@media screen and (min-width: 768px) {
+  .trainingPage.trainingPageNoEmpty {
+    padding-top: 62px;
+    padding-bottom: 104px;
+  }
+  .trainingProgress {
+    margin-bottom: 16px;
+  }
+  .trainingProgressBar {
+    --progress-size: 48px;
+  }
+
+  .trainingPage {
+    padding: 140px 0 227px;
+  }
+  .containerEmpty {
+    padding-left: 94px;
+    padding-right: 94px;
+  }
+  .emptyState {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .wrapperImgTraining {
+    width: 205px;
+    height: 230px;
+    margin: 0 auto 32px;
+  }
+  .emptyImage {
+    margin: 0 auto 4px;
+  }
+
+  .emptyTitle {
+    font-weight: 500;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .emptyText {
+    font-size: 14px;
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .emptyActions {
+    flex-direction: row;
+    margin-top: 64px;
+  }
+
+  .primaryButton {
+    width: 215px;
+    font-size: 18px;
+    line-height: 1.55556;
+  }
+
+  .secondaryButton {
+    width: 203px;
+    height: 56px;
+    border: 1px solid var(--color-green);
+    border-radius: 30px;
+    padding: 14px;
+    color: var(--color-green);
+    font-size: 18px;
+    line-height: 1.55556;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .trainingProgressBar {
+    --progress-size: 52px;
+  }
+
+  .trainingPage {
+    padding-top: 281px;
+    padding-bottom: 230px;
+  }
+  .containerEmpty {
+    padding-left: 269px;
+    padding-right: 269px;
+  }
+  .emptyState {
+    min-height: auto;
+    flex-direction: row-reverse;
+    margin: 0;
+    max-width: 902px;
+    padding: 16px 0 16px 24px;
+    gap: 32px;
+  }
+  .wrapperImgTraining {
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+  .emptyTitle {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
+  .emptyText {
+    font-size: 16px;
+  }
+
+  .primaryButton:hover {
+    background: var(--color-hover-btn);
+  }
+  .secondaryButton:hover {
+    background-color: var(--color-hover-btn);
+    color: var(--color-light-grey);
+    border-color: var(--color-hover-btn);
+  }
 }

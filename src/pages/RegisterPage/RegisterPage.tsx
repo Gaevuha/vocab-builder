@@ -104,7 +104,9 @@ export function RegisterPage() {
       </div>
 
       {(!isDesktop || isTablet) && (
-        <div className={styles.wrapperFormBtn}>
+        <div
+          className={`${styles.wrapperFormBtn} ${styles.wrapperFormBtnRegister}`}
+        >
           <h1 className={styles.title}>Register</h1>
           <p
             className={`${styles.textLoginPage} ${styles.textLoginPageRegister}`}

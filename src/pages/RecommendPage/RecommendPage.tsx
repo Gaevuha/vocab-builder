@@ -32,6 +32,11 @@ export function RecommendPage() {
   const getErrorMessage = (error: unknown, fallback: string) =>
     error instanceof Error ? error.message : fallback;
 
+  const refreshTasksCount = useCallback(async () => {
+    const tasks = await fetchTrainingTasks();
+    setTasksCount(tasks.length);
+  }, []);
+
   useEffect(() => {
     dispatch(loadCategories());
   }, [dispatch]);
@@ -97,8 +102,7 @@ export function RecommendPage() {
         const stats = await fetchStatistics();
         setStatistics(stats);
 
-        const tasks = await fetchTrainingTasks();
-        setTasksCount(tasks.length);
+        await refreshTasksCount();
       } catch (error) {
         dispatch(
           showNotification({
@@ -108,7 +112,7 @@ export function RecommendPage() {
         );
       }
     })();
-  }, [dispatch]);
+  }, [dispatch, refreshTasksCount]);
 
   const handleSearch = (value: string) => {
     setSearchQuery(value);
@@ -126,6 +130,7 @@ export function RecommendPage() {
   async function handleAddToDictionary(word: Word) {
     try {
       await addForeignWord(word.id);
+      await refreshTasksCount();
 
       dispatch(
         showNotification({

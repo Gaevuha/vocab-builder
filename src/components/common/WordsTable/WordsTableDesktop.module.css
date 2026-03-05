@@ -61,6 +61,12 @@
   min-width: 46px;
 }
 
+.dictionaryProgressBar {
+  --progress-size: 24px;
+  --progress-color: #2bd627;
+  --progress-trail: #d4f8d3;
+}
+
 /* Стилі для клітинок */
 .table tbody td {
   padding: 22px;
