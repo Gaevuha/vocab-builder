@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ProgressBar } from "../../components/common/ProgressBar/ProgressBar";
 import { TrainingRoom } from "../../components/training/TrainingRoom";
 import { WellDoneModal } from "../../components/modals/WellDoneModal/WellDoneModal";
@@ -15,8 +15,27 @@ import type {
   TrainingSubmitItem,
   TrainingTask,
 } from "../../types/training";
-import { calculateScore, normalize } from "../../utils/training";
+import { normalize } from "../../utils/training";
 import styles from "./TrainingPage.module.css";
+
+type TrainingResult = {
+  correctAnswers: string[];
+  mistakes: string[];
+};
+
+const isNonEmptyString = (value: unknown): value is string =>
+  typeof value === "string" && value.trim().length > 0;
+
+const pickCanonicalMatch = (
+  input: string,
+  candidates: Array<string | undefined>
+) => {
+  const normalizedInput = normalize(input);
+  return candidates.find(
+    (candidate) =>
+      isNonEmptyString(candidate) && normalize(candidate) === normalizedInput
+  );
+};
 
 export function TrainingPage() {
   const tasks = useAppSelector((state) => state.training.tasks);
@@ -26,12 +45,12 @@ export function TrainingPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [score, setScore] = useState(0);
+  const [result, setResult] = useState<TrainingResult>({
+    correctAnswers: [],
+    mistakes: [],
+  });
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // ✅ queue для часткових submit
-  const partialSubmitQueueRef = useRef<Promise<unknown>>(Promise.resolve());
 
   // Завантаження завдань
   useEffect(() => {
@@ -83,22 +102,15 @@ export function TrainingPage() {
       }
 
       const rawAnswer = answer.answer.trim();
-      const expectedEnRaw = dictionaryWord?.en ?? task.en ?? "";
-      const expectedUaRaw = dictionaryWord?.ua ?? task.ua ?? "";
-      const answerNorm = normalize(rawAnswer);
-      const expectedEnNorm = normalize(expectedEnRaw);
-      const expectedUaNorm = normalize(expectedUaRaw);
+      const enCandidates = [dictionaryWord?.en, task.en];
+      const uaCandidates = [dictionaryWord?.ua, task.ua];
 
-      const matchesExpectedEn =
-        expectedEnRaw.length > 0 && expectedEnNorm === answerNorm;
-      const matchesExpectedUa =
-        expectedUaRaw.length > 0 && expectedUaNorm === answerNorm;
+      const matchedEn = pickCanonicalMatch(rawAnswer, enCandidates);
+      const matchedUa = pickCanonicalMatch(rawAnswer, uaCandidates);
 
-      const canonicalAnswer = matchesExpectedEn
-        ? expectedEnRaw
-        : matchesExpectedUa
-        ? expectedUaRaw
-        : rawAnswer;
+      const canonicalAnswer = matchedEn ?? matchedUa ?? rawAnswer;
+      const expectedEnRaw = enCandidates.find(isNonEmptyString) ?? "";
+      const expectedUaRaw = uaCandidates.find(isNonEmptyString) ?? "";
 
       return {
         _id: answer.taskId,
@@ -109,58 +121,65 @@ export function TrainingPage() {
     });
   };
 
-  // Часткове збереження
-  // 🔹 Часткове збереження (тільки правильні відповіді)
-  const handlePartialSubmit: NonNullable<
-    TrainingRoomProps["onPartialSubmit"]
-  > = async (answers) => {
-    if (!answers.length) return;
-
-    // Перевірка останньої відповіді
-    const lastAnswer = answers[answers.length - 1];
-    const task = tasks.find((t) => t.id === lastAnswer.taskId);
-    const dictionaryWord = dictionaryWords.find(
-      (w) => w.id === lastAnswer.taskId
-    );
-
-    if (!task) return;
-
-    const rawAnswer = lastAnswer.answer.trim();
-    const expectedEn = dictionaryWord?.en ?? task.en ?? "";
-    const expectedUa = dictionaryWord?.ua ?? task.ua ?? "";
-
-    const normalizedAnswer = normalize(rawAnswer);
-    const isCorrect =
-      normalize(expectedEn) === normalizedAnswer ||
-      normalize(expectedUa) === normalizedAnswer;
-
-    if (!isCorrect) {
-      // ❌ Нотифікація про неправильну відповідь
-      dispatch(
-        showNotification({
-          message: "Incorrect answer, progress not saved",
-          type: "error",
-        })
-      );
-      return;
-    }
-
-    // ✅ Відповідь правильна — сабмітимо
-    const payload = buildPayload([lastAnswer]); // передаємо тільки останню правильну відповідь
-
-    partialSubmitQueueRef.current = partialSubmitQueueRef.current.then(() =>
-      submitTraining(payload)
-    );
-
+  // Фінальне збереження + score
+  const handleSubmit: TrainingRoomProps["onSubmit"] = async (answers) => {
     try {
-      await partialSubmitQueueRef.current;
+      const payload = buildPayload(answers);
+      await submitTraining(payload);
 
-      dispatch(
-        showNotification({
-          message: "Progress saved successfully",
-          type: "success",
-        })
+      const answersByTaskId = new Map(
+        answers.map((answer) => [answer.taskId, answer.answer])
       );
+
+      const correctAnswers: string[] = [];
+      const mistakes: string[] = [];
+
+      tasks.forEach((task) => {
+        const userAnswer = answersByTaskId.get(task.id);
+        const dictionaryWord = dictionaryWords.find(
+          (word) => word.id === task.id
+        );
+        const wordLabel =
+          task.question ||
+          (task.task === "en"
+            ? dictionaryWord?.ua || task.ua || dictionaryWord?.en || task.en
+            : dictionaryWord?.en || task.en || dictionaryWord?.ua || task.ua);
+
+        if (!userAnswer) {
+          mistakes.push(wordLabel);
+          return;
+        }
+
+        const normalizedAnswer = normalize(userAnswer);
+        const directionExpected =
+          task.task === "en"
+            ? [dictionaryWord?.en, task.en]
+            : [dictionaryWord?.ua, task.ua];
+
+        const fallbackExpected = [
+          dictionaryWord?.en,
+          dictionaryWord?.ua,
+          task.en,
+          task.ua,
+        ];
+
+        const expectedValues = (
+          directionExpected.some(Boolean) ? directionExpected : fallbackExpected
+        )
+          .filter(isNonEmptyString)
+          .map((value) => normalize(value));
+
+        if (expectedValues.includes(normalizedAnswer)) {
+          correctAnswers.push(wordLabel);
+          return;
+        }
+
+        mistakes.push(wordLabel);
+      });
+
+      setResult({ correctAnswers, mistakes });
+
+      setModalOpen(true);
     } catch {
       dispatch(
         showNotification({
@@ -168,30 +187,6 @@ export function TrainingPage() {
           type: "error",
         })
       );
-    }
-  };
-
-  // Фінальне збереження + score
-  const handleSubmit: TrainingRoomProps["onSubmit"] = async (answers) => {
-    try {
-      await partialSubmitQueueRef.current;
-
-      const payload = buildPayload(answers);
-      await submitTraining(payload);
-
-      // 🔹 рахуємо score з нормалізацією
-      const finalScore = calculateScore(tasks, answers);
-      setScore(finalScore);
-
-      setModalOpen(true);
-      partialSubmitQueueRef.current = Promise.resolve();
-    } catch (error) {
-      partialSubmitQueueRef.current = Promise.resolve();
-
-      const message =
-        error instanceof Error ? error.message : "Training save failed";
-
-      dispatch(showNotification({ message, type: "error" }));
 
       navigate(routes.dictionary, { replace: true });
     }
@@ -200,8 +195,10 @@ export function TrainingPage() {
   if (loading) {
     return (
       <section className={styles.trainingPage}>
-        <h1>Training</h1>
-        <p>Loading...</p>
+        <div className="container">
+          <h1 className="visually-hidden">Training</h1>
+          <div className={styles.loadingState}>Loading...</div>
+        </div>
       </section>
     );
   }
@@ -209,31 +206,77 @@ export function TrainingPage() {
   if (!tasks.length) {
     return (
       <section className={styles.trainingPage}>
-        <h1>Training</h1>
-        <p>
-          No tasks yet. <Link to={`${routes.dictionary}?add=1`}>Add word</Link>
-        </p>
+        <div className={`${styles.containerEmpty} container`}>
+          <div className={styles.emptyState}>
+            <div className={styles.wrapperImgTraining}>
+              <picture>
+                <source
+                  srcSet="/img/blood-report-tablet.webp 1x, /img/blood-report-tablet@2x.webp 2x"
+                  media="(min-width: 768px)"
+                />
+                <img
+                  src="/img/blood-report-mobile.webp"
+                  srcSet="/img/blood-report-mobile.webp 1x, /img/blood-report-mobile@2x.webp 2x"
+                  alt="Illustration"
+                  className={styles.imgTraining}
+                />
+              </picture>
+            </div>
+            <div className={styles.wrapperContent}>
+              <p className={styles.emptyTitle}>
+                You don&apos;t have a single word to learn right now.
+              </p>
+
+              <p className={styles.emptyText}>
+                Please create or add a word to start the workout. We want to
+                improve your vocabulary and develop your knowledge, so please
+                share the words you are interested in adding to your study.
+              </p>
+
+              <div className={styles.emptyActions}>
+                <button
+                  type="button"
+                  className={styles.primaryButton}
+                  onClick={() => navigate(`${routes.dictionary}?add=1`)}
+                >
+                  Add word
+                </button>
+
+                <button
+                  type="button"
+                  className={styles.secondaryButton}
+                  onClick={() => navigate(routes.dictionary)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     );
   }
 
   return (
-    <section className={styles.trainingPage}>
-      <h1>Training</h1>
+    <section className={`${styles.trainingPage} ${styles.trainingPageNoEmpty}`}>
+      <div className={`${styles.containerNoEmpty} container`}>
+        <div className={styles.trainingProgress}>
+          <ProgressBar
+            value={progress}
+            max={tasks.length}
+            className={styles.trainingProgressBar}
+            showValue
+            strokeWidth={9}
+          />
+        </div>
 
-      <div className={styles.trainingProgress}>
-        <ProgressBar value={progress} max={tasks.length} showValue />
+        <TrainingRoom tasks={tasks} onSubmit={handleSubmit} />
       </div>
-
-      <TrainingRoom
-        tasks={tasks}
-        onSubmit={handleSubmit}
-        onPartialSubmit={handlePartialSubmit}
-      />
 
       <WellDoneModal
         isOpen={modalOpen}
-        score={score}
+        correctAnswers={result.correctAnswers}
+        mistakes={result.mistakes}
         onClose={() => {
           setModalOpen(false);
           navigate(routes.dictionary, { replace: true });

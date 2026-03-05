@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import type { Row } from "@tanstack/react-table";
 import {
   useReactTable,
@@ -10,8 +10,6 @@ import type { Word, WordsTableProps } from "../../../types/words";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { RowActions } from "./WordsTableActions";
 import styles from "./WordsTableMobile.module.css";
-import { useAppDispatch } from "../../../store/hooks";
-import { showNotification } from "../../../store/slices/uiSlice";
 
 export function WordsTableMobile({
   words,
@@ -21,20 +19,6 @@ export function WordsTableMobile({
   onAddToDictionary,
   tableMode = "dictionary",
 }: WordsTableProps) {
-  const dispatch = useAppDispatch();
-
-  // Повідомлення, якщо немає слів
-  useEffect(() => {
-    if (words.length === 0) {
-      dispatch(
-        showNotification({
-          type: "info",
-          message: "No words found!",
-        })
-      );
-    }
-  }, [words, dispatch]);
-
   const columns = useMemo<ColumnDef<Word>[]>(
     () => [
       {
@@ -83,7 +67,7 @@ export function WordsTableMobile({
                   <ProgressBar
                     value={row.original.progress}
                     max={100}
-                    size={24}
+                    className={styles.dictionaryProgressBar}
                   />
                 </div>
               ),

@@ -36,6 +36,7 @@
   background-color: var(--bg-header-table);
   margin: 0 auto;
   padding: 32px 16px 57px;
+  min-height: 500px;
 }
 .title {
   font-weight: 600;
@@ -73,6 +74,10 @@
     padding: 48px 64px;
     margin-bottom: 172px;
     border-radius: 30px;
+    min-height: 640px;
+  }
+  .wrapperFormBtn.wrapperFormBtnRegister {
+    margin-bottom: 98px;
   }
   .title {
     letter-spacing: -0.02em;
@@ -119,18 +124,20 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
+    align-items: center;
   }
   .wrapperLogoImgTag {
     margin-bottom: 0;
   }
   .wrapperFormBtn {
     margin: 0;
+    min-height: 620px;
   }
   .wrapperImgMobile {
     margin-top: 0;
   }
-  .wrapperImgMobile.wrapperImgMobileRegister {
-    margin-bottom: 16px;
+  .wrapperLogoImgTag.wrapperLogoImgTagRegister {
+    margin-bottom: 0;
   }
 
   .tagline {

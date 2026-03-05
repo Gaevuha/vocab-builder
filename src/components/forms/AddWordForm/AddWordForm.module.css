@@ -184,6 +184,11 @@
   font-weight: 700;
   width: 159px;
   height: 48px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.btnAdd:focus-visible {
+  color: var(--color-green);
+  outline: none;
 }
 
 .btnCancel {
@@ -196,8 +201,15 @@
   width: 145px;
   height: 48px;
   background-color: transparent;
+  transition: color 0.3s ease, background-color 0.3s ease,
+    border-color 0.3s ease;
 }
-
+.btnCancel:focus-visible {
+  background-color: var(--color-light-grey);
+  color: var(--color-dark);
+  border-color: var(--color-light-grey);
+  outline: none;
+}
 /* Chrome, Edge, Safari */
 .inputModal:-webkit-autofill,
 .inputModal:-webkit-autofill:hover,
@@ -285,5 +297,15 @@
   .iconEn {
     width: 32px;
     height: 32px;
+  }
+}
+@media screen and (min-width: 1440px) {
+  .btnAdd:hover {
+    color: var(--color-green);
+  }
+  .btnCancel:hover {
+    background-color: var(--color-light-grey);
+    color: var(--color-dark);
+    border-color: var(--color-light-grey);
   }
 }

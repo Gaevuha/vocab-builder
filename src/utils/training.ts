@@ -1,7 +1,12 @@
 import type { TrainingAnswer, TrainingTask } from "../types/training";
 
 export const normalize = (value: string): string =>
-  value.trim().toLocaleLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ");
+  value
+    .normalize("NFKC")
+    .trim()
+    .toLocaleLowerCase("uk-UA")
+    .replace(/[’'ʼ`´]/g, "'")
+    .replace(/\s+/g, " ");
 
 export const isCorrectAnswer = (
   task: TrainingTask,

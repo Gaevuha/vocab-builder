@@ -6,12 +6,12 @@ interface LogoProps {
   page?: "login" | "register";
 }
 
-export function Logo({ page = "login" }: LogoProps) {
+export function Logo({ page }: LogoProps) {
   return (
     <Link
       className={`${styles.logoLink} ${
-        page === "register" ? styles.logoLinkRegister : ""
-      }`}
+        page === "login" ? styles.logoLinkLogin : ""
+      } ${page === "register" ? styles.logoLinkRegister : ""}`}
       to={routes.dictionary}
     >
       <svg className={styles.iconLogo}>

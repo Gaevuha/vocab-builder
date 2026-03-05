@@ -4,9 +4,14 @@ import styles from "./ModalWrapper.module.css";
 
 type ModalWrapperProps = PropsWithChildren<{
   onClose: () => void;
+  className?: string;
 }>;
 
-export function ModalWrapper({ onClose, children }: ModalWrapperProps) {
+export function ModalWrapper({
+  onClose,
+  children,
+  className,
+}: ModalWrapperProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const lastFocusedElement = useRef<HTMLElement | null>(null);
 
@@ -67,7 +72,7 @@ export function ModalWrapper({ onClose, children }: ModalWrapperProps) {
     <div className={styles.backdrop} onClick={handleClose} role="presentation">
       <div
         ref={modalRef}
-        className={styles.modal}
+        className={`${styles.modal} ${className || ""}`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

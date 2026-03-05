@@ -29,6 +29,12 @@
   justify-content: center;
   height: 100%;
 }
+
+.dictionaryProgressBar {
+  --progress-size: 22px;
+  --progress-color: #2bd627;
+  --progress-trail: #d4f8d3;
+}
 .table tbody td {
   padding: 14px 16px;
   font-size: 14px;
@@ -78,4 +84,10 @@
   font-weight: 500;
   background-color: var(--color-normal-grey);
   color: var(--color-dark);
+}
+
+@media screen and (min-width: 375px) {
+  .dictionaryProgressBar {
+    --progress-size: 24px;
+  }
 }

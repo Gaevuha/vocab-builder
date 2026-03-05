@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import type { Row } from "@tanstack/react-table";
 import {
   useReactTable,
@@ -10,8 +10,6 @@ import type { Word, WordsTableProps } from "../../../types/words";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { RowActions } from "./WordsTableActions";
 import styles from "./WordsTableDesktop.module.css";
-import { useAppDispatch } from "../../../store/hooks";
-import { showNotification } from "../../../store/slices/uiSlice";
 
 export function WordsTableDesktop({
   words,
@@ -21,15 +19,6 @@ export function WordsTableDesktop({
   onAddToDictionary,
   tableMode = "dictionary",
 }: WordsTableProps) {
-  const dispatch = useAppDispatch();
-
-  // Викликаємо Notification при порожньому масиві
-  useEffect(() => {
-    if (words.length === 0) {
-      dispatch(showNotification({ message: "No words found", type: "info" }));
-    }
-  }, [words, dispatch]);
-
   const columns = useMemo<ColumnDef<Word>[]>(() => {
     const baseColumns: ColumnDef<Word>[] = [
       {
@@ -104,7 +93,11 @@ export function WordsTableDesktop({
               <span className={styles.textProgress}>
                 {row.original.progress}%
               </span>
-              <ProgressBar value={row.original.progress} max={100} size={28} />
+              <ProgressBar
+                value={row.original.progress}
+                max={100}
+                className={styles.dictionaryProgressBar}
+              />
             </div>
           ),
         },

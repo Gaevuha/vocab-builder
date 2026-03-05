@@ -1,113 +1,168 @@
-# React + TypeScript + Vite
+# 📚 Vocab Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
 
-Currently, two official plugins are available:
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![React](https://img.shields.io/badge/React-19-61dafb.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg)
+![Vite](https://img.shields.io/badge/Vite-7-646cff.svg)
+![Redux](https://img.shields.io/badge/Redux_Toolkit-2.x-764abc.svg)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🚀 Build your vocabulary, one word at a time
 
-## React Compiler
+[Features](#-features) •
+[Tech Stack](#-tech-stack) •
+[Getting Started](#-getting-started) •
+[Project Structure](#-project-structure)
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+</div>
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ✨ Features
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+|     |                                                                              |
+| --- | ---------------------------------------------------------------------------- |
+| 🔐  | **Authentication** — Register, login, and protected routes                   |
+| 📖  | **Dictionary Management** — Add, edit, and delete words                      |
+| 💡  | **Smart Recommendations** — Discover new words and add instantly             |
+| 🎯  | **Interactive Training** — Practice with progress tracking and final results |
+| 📱  | **Responsive Design** — Optimized for mobile, tablet, and desktop            |
+| 🔔  | **Global Notifications** — Real-time success/error/info feedback             |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```mermaid
+graph LR
+    A[React 19 + TypeScript] --> B[Vite 7]
+    C[Redux Toolkit] --> D[State Management]
+    E[React Router] --> F[Navigation]
+    G[React Hook Form] --> H[Form Handling]
+    I[Yup] --> J[Validation]
+    K[Axios] --> L[API Communication]
+    M[TanStack Table] --> N[Data Tables]
+    O[CSS Modules] --> P[Scoped Styling]
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Core Dependencies
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+- ⚛️ React 19 with TypeScript
+- ⚡ Vite 7 for fast dev/build experience
+- 🗃️ Redux Toolkit for state management
+- 🚦 React Router for app navigation
+- 📝 React Hook Form + Yup for forms and validation
+- 🌐 Axios for API calls
+- 📊 TanStack React Table for dictionary/recommend tables
+- 🎨 CSS Modules for component-scoped styles
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## 📂 Project Structure
+
+```text
+src/
+├── app/                 # routes, layouts, app shell
+├── components/          # reusable UI components
+│   ├── common/          # shared UI (inputs, notifications, tables, etc.)
+│   ├── dashboard/       # dashboard blocks (filters, stats, actions)
+│   ├── forms/           # login/register/add/edit forms
+│   ├── header/          # top navigation and user controls
+│   ├── modals/          # add/edit/well-done modals
+│   └── training/        # training room UI
+├── hooks/               # custom hooks
+├── pages/               # route pages
+├── services/            # API layer
+├── store/               # Redux store and slices
+├── styles/              # global styles and tokens
+├── types/               # TypeScript domain types
+└── utils/               # helper utilities
 ```
 
-Коментар по структури
+## 🚀 Getting Started
 
-src/app/
+### Prerequisites
 
-layouts/ — коректно для AuthLayout / MainLayout
+- Node.js 18+
+- npm
 
-router/, AppRoutes.tsx, routes.ts — добре для налаштування React Router
+### 1) Install dependencies
 
-App.tsx — кореневий компонент
+```bash
+npm install
+```
 
-src/components/
+### 2) Configure environment
 
-common/ — UI-компоненти (кнопки, інпути, лоадери, notification)
+Create a `.env` file in the project root:
 
-dashboard/ — компоненти Dashboard (Filters, Statistics, AddWordBtn)
+```bash
+VITE_API_URL=https://your-api-url
+VITE_USE_CREDENTIALS=false
+```
 
-forms/ — форми Login, Register, AddWordForm, EditWordForm
+### 3) Run development server
 
-header/ — Header + UserNav + UserBar
+```bash
+npm run dev
+```
 
-modals/ — всі модалки (AddWordModal, EditWordModal, WellDoneModal)
+### 4) Build and preview production
 
-training/ — TrainingRoom, ProgressBar
+```bash
+npm run build
+npm run preview
+```
 
-src/hooks/ — кастомні хуки (debounce, modal, auth, pagination)
+## 🧭 Application Routes
 
-src/pages/ — сторінки Login, Register, Dictionary, Recommend, Training
+### Public
 
-src/services/ — API-сервіси (authApi.ts, wordsApi.ts, trainingApi.ts, categoriesApi.ts)
+- `/login` — Sign in
+- `/register` — Create account
 
-src/store/ — Redux Toolkit (slices + store setup)
+### Protected
 
-src/styles/ — глобальні CSS, можливо tailwind / css modules
+- `/dictionary` — Manage your own words
+- `/recommend` — Browse recommended words
+- `/training` — Practice and track progress
 
-src/types/ — всі TS типи
+## 💫 User Flow
 
-src/utils/ — допоміжні функції (sanitize, constants, routes)
+```mermaid
+flowchart LR
+    A[Register / Login] --> B[Dictionary]
+    B --> C[Add or Edit Words]
+    B --> D[Recommend]
+    D --> E[Add to Dictionary]
+    B --> F[Training]
+    F --> G[Answer Tasks]
+    G --> H[Save Results]
+    H --> I[Well Done Modal]
+```
 
-src/main.tsx / main.ts — точка входу React + рендер в root
+## 📜 Available Scripts
+
+| Command           | Description                         |
+| ----------------- | ----------------------------------- |
+| `npm run dev`     | Start Vite development server       |
+| `npm run build`   | Type-check and build for production |
+| `npm run preview` | Preview production build locally    |
+| `npm run lint`    | Run ESLint                          |
+
+## 🔧 Environment Variables
+
+| Variable               | Description                     | Required |
+| ---------------------- | ------------------------------- | -------- |
+| `VITE_API_URL`         | Backend API base URL            | ✅       |
+| `VITE_USE_CREDENTIALS` | Enable cookies/credentials mode | ❌       |
+
+## 📝 License
+
+Private project for educational and product development purposes.
+
+## 📬 Contact
+
+- 👤 **Serhii Haievoi**
+- ✉️ [serhiihaievoi@gmail.com](mailto:serhiihaievoi@gmail.com)
+- 📱 [+380930773039](tel:+380930773039)
+- 💬 [Telegram](https://t.me/Gaevuha)
+- 💻 [GitHub](https://github.com/Gaevuha)
+- 🔗 [LinkedIn](https://www.linkedin.com/in/serhii-haievoi/)
